@@ -60,6 +60,9 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+#include "SD.hh"
+#include "G4ProductionCuts.hh"
+
 G4bool LXeDetectorConstruction::fSphereOn = true;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -217,54 +220,9 @@ void LXeDetectorConstruction::DefineMaterials(){
   fVacuum->SetMaterialPropertiesTable(vacuum_mt);
   fAir->SetMaterialPropertiesTable(vacuum_mt);//Give air the same rindex
 
-  // G4double wls_Energy[] = {2.00*eV,2.87*eV,2.90*eV,3.47*eV};
-  // const G4int wlsnum = sizeof(wls_Energy)/sizeof(G4double);
- 
-  // G4double rIndexPstyrene[]={ 1.5, 1.5, 1.5, 1.5};
-  // assert(sizeof(rIndexPstyrene) == sizeof(wls_Energy));
-  // G4double absorption1[]={2.*cm, 2.*cm, 2.*cm, 2.*cm};
-  // assert(sizeof(absorption1) == sizeof(wls_Energy));
-  // G4double scintilFast[]={0.00, 0.00, 1.00, 1.00};
-  // assert(sizeof(scintilFast) == sizeof(wls_Energy));
-  // fMPTPStyrene = new G4MaterialPropertiesTable();
-  // fMPTPStyrene->AddProperty("RINDEX",wls_Energy,rIndexPstyrene,wlsnum);
-  // fMPTPStyrene->AddProperty("ABSLENGTH",wls_Energy,absorption1,wlsnum);
-  // fMPTPStyrene->AddProperty("FASTCOMPONENT",wls_Energy, scintilFast,wlsnum);
-  // fMPTPStyrene->AddConstProperty("SCINTILLATIONYIELD",10./keV);
-  // fMPTPStyrene->AddConstProperty("RESOLUTIONSCALE",1.0);
-  // fMPTPStyrene->AddConstProperty("FASTTIMECONSTANT", 10.*ns);
-  // fPstyrene->SetMaterialPropertiesTable(fMPTPStyrene);
-
-  // Set the Birks Constant for the Polystyrene scintillator
-
-  // fPstyrene->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
-
-  // G4double RefractiveIndexFiber[]={ 1.60, 1.60, 1.60, 1.60};
-  // assert(sizeof(RefractiveIndexFiber) == sizeof(wls_Energy));
-  // G4double AbsFiber[]={9.00*m,9.00*m,0.1*mm,0.1*mm};
-  // assert(sizeof(AbsFiber) == sizeof(wls_Energy));
-  // G4double EmissionFib[]={1.0, 1.0, 0.0, 0.0};
-  // assert(sizeof(EmissionFib) == sizeof(wls_Energy));
-  // G4MaterialPropertiesTable* fiberProperty = new G4MaterialPropertiesTable();
-  // fiberProperty->AddProperty("RINDEX",wls_Energy,RefractiveIndexFiber,wlsnum);
-  // fiberProperty->AddProperty("WLSABSLENGTH",wls_Energy,AbsFiber,wlsnum);
-  // fiberProperty->AddProperty("WLSCOMPONENT",wls_Energy,EmissionFib,wlsnum);
-  // fiberProperty->AddConstProperty("WLSTIMECONSTANT", 0.5*ns);
-  // fPMMA->SetMaterialPropertiesTable(fiberProperty);
-
-  // G4double RefractiveIndexClad1[]={ 1.49, 1.49, 1.49, 1.49};
-  // assert(sizeof(RefractiveIndexClad1) == sizeof(wls_Energy));
-  // G4MaterialPropertiesTable* clad1Property = new G4MaterialPropertiesTable();
-  // clad1Property->AddProperty("RINDEX",wls_Energy,RefractiveIndexClad1,wlsnum);
-  // clad1Property->AddProperty("ABSLENGTH",wls_Energy,AbsFiber,wlsnum);
-  // fPethylene1->SetMaterialPropertiesTable(clad1Property);
-
-  // G4double RefractiveIndexClad2[]={ 1.42, 1.42, 1.42, 1.42};
-  // assert(sizeof(RefractiveIndexClad2) == sizeof(wls_Energy));
-  // G4MaterialPropertiesTable* clad2Property = new G4MaterialPropertiesTable();
-  // clad2Property->AddProperty("RINDEX",wls_Energy,RefractiveIndexClad2,wlsnum);
-  // clad2Property->AddProperty("ABSLENGTH",wls_Energy,AbsFiber,wlsnum);
-  // fPethylene2->SetMaterialPropertiesTable(clad2Property);
+  G4NistManager * man = G4NistManager::Instance();
+  G4Material * Si = man->FindOrBuildMaterial("G4_Si");
+  fSiMaterial = Si;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -288,7 +246,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
 
   fExperimentalHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-  //Place the main volume
+  //Place the main volumes - scintillators!
   if(fMainVolumeOn){
     fMainVolume
       = new LXeMainVolume(0,G4ThreeVector(),fExperimentalHall_log,false,0,this);
@@ -296,38 +254,48 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
       = new LXeMainVolume(0, G4ThreeVector(0., 0., 0.64 * 2. * cm), fExperimentalHall_log, false, 0, this);
   }
 
-  //Place the WLS slab
-  // if(fWLSslab){
-  //   G4VPhysicalVolume* slab = new LXeWLSSlab(0,G4ThreeVector(0.,0.,
-  //                                            -fScint_z/2.-fSlab_z-1.*cm),
-  //                                            fExperimentalHall_log,false,0,
-  //                                            this);
+  //Place the silicon!
+  G4double TargetSizeZ = 0.3*mm;//0.2*um; 
+  G4double TargetSizeX = 63.*mm;
+  G4double TargetSizeY = 63.*mm;
 
-  //   //Surface properties for the WLS slab
-  //   G4OpticalSurface* scintWrap = new G4OpticalSurface("ScintWrap");
- 
-  //   new G4LogicalBorderSurface("ScintWrap", slab,
-  //                              fExperimentalHall_phys,
-  //                              scintWrap);
- 
-  //   scintWrap->SetType(dielectric_metal);
-  //   scintWrap->SetFinish(polished);
-  //   scintWrap->SetModel(glisur);
+  G4Box* targetSolid = new G4Box("Target",				     //its name
+				 TargetSizeX/2,TargetSizeY/2,TargetSizeZ/2);   //its size
 
-  //   G4double pp[] = {2.0*eV, 3.5*eV};
-  //   const G4int num = sizeof(pp)/sizeof(G4double);
-  //   G4double reflectivity[] = {1., 1.};
-  //   assert(sizeof(reflectivity) == sizeof(pp));
-  //   G4double efficiency[] = {0.0, 0.0};
-  //   assert(sizeof(efficiency) == sizeof(pp));
-    
-  //   G4MaterialPropertiesTable* scintWrapProperty 
-  //     = new G4MaterialPropertiesTable();
 
-  //   scintWrapProperty->AddProperty("REFLECTIVITY",pp,reflectivity,num);
-  //   scintWrapProperty->AddProperty("EFFICIENCY",pp,efficiency,num);
-  //   scintWrap->SetMaterialPropertiesTable(scintWrapProperty);
-  // }
+  G4LogicalVolume *logicTarget = new G4LogicalVolume(targetSolid, //its solid
+                                                     fSiMaterial, //its material
+                                                     "Target");   //its name
+
+  new G4PVPlacement(0,                                      //no rotation
+                    G4ThreeVector(0., 0., -0.64 * 2. * cm), //at (0,0,0)
+                    logicTarget,                            //its logical volume
+                    "Target",
+                    fExperimentalHall_log, //its mother  volume
+                    0,
+                    false, //no boolean operation
+                    0);    //copy number
+
+  // Visualization attributes
+  G4VisAttributes* worldVisAtt1 = new G4VisAttributes(G4Colour(1.0,0.0,0.0)); 
+  worldVisAtt1->SetVisibility(true);
+  logicTarget->SetVisAttributes(worldVisAtt1);
+
+  // Create Target G4Region and add logical volume
+  
+  fRegion = new G4Region("Target");
+  
+  G4ProductionCuts* cuts = new G4ProductionCuts();
+  
+  G4double defCut = 1*nanometer;
+  cuts->SetProductionCut(defCut,"gamma");
+  cuts->SetProductionCut(defCut,"e-");
+  cuts->SetProductionCut(defCut,"e+");
+  cuts->SetProductionCut(defCut,"proton");
+  
+  fRegion->SetProductionCuts(cuts);
+  fRegion->AddRootLogicalVolume(logicTarget); 
+
 
   return fExperimentalHall_phys;
 }
@@ -369,6 +337,14 @@ void LXeDetectorConstruction::ConstructSDandField() {
   }
   G4SDManager::GetSDMpointer()->AddNewDetector(fScint_SD.Get());
   SetSensitiveDetector(fMainVolume->GetLogScint(), fScint_SD.Get());
+
+  G4String trackerChamberSDname = "B2/TrackerChamberSD";
+  B2TrackerSD* aTrackerSD = new B2TrackerSD(trackerChamberSDname,
+                                            "TrackerHitsCollection");
+  G4SDManager::GetSDMpointer()->AddNewDetector(aTrackerSD);
+  // Setting aTrackerSD to all logical volumes with the same name 
+  // of "Chamber_LV".
+  SetSensitiveDetector("Target", aTrackerSD, true);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

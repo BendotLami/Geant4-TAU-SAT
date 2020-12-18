@@ -42,6 +42,15 @@ class G4Sphere;
 #include "LXeDetectorMessenger.hh"
 #include "G4VisAttributes.hh"
 #include "G4RotationMatrix.hh"
+#include "G4VUserDetectorConstruction.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4NistManager.hh"
+#include "G4PVPlacement.hh"
+#include "G4UserLimits.hh"
+#include "G4VisAttributes.hh"
+
 
 #include "LXeScintSD.hh"
 #include "LXePMTSD.hh"
@@ -153,6 +162,10 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     G4Cache<LXeScintSD*> fScint_SD;
     G4Cache<LXePMTSD*> fPmt_SD;
 
+    G4Material*        fSiMaterial;
+    G4LogicalVolume*   fLogicWorld;  
+    G4Box*             fSolidWorld;
+    G4Region*          fRegion;
 };
 
 #endif
