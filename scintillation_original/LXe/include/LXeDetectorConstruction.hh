@@ -108,6 +108,8 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     void SetMainScintYield(G4double );
     // void SetWLSScintYield(G4double );
 
+    G4Region* GetTargetRegion()  {return fRegion;}
+
   private:
 
     void DefineMaterials();

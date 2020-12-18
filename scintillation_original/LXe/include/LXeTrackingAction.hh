@@ -34,18 +34,31 @@
 #include "G4UserTrackingAction.hh"
 #include "globals.hh"
 
+class G4Region;
+class G4ParticleDefinition;
+class LXeDetectorConstruction;
+
 class LXeTrackingAction : public G4UserTrackingAction {
 
   public:
 
-    LXeTrackingAction();
+    LXeTrackingAction(LXeDetectorConstruction* detector);
     virtual ~LXeTrackingAction() {};
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);
 
+    void SetDetector(LXeDetectorConstruction* detector)
+    {
+        fDetector = detector;
+    }
+
   private:
 
+    LXeDetectorConstruction* fDetector;
+    G4Region* fTargetRegion;
+    std::map<const G4ParticleDefinition*, int> fNParticleInTarget;
+    std::map<const G4ParticleDefinition*, int> fNParticleInWorld;
 };
 
 #endif

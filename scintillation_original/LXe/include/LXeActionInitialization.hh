@@ -40,7 +40,7 @@ class LXeDetectorConstruction;
 class LXeActionInitialization : public G4VUserActionInitialization
 {
   public:
-    LXeActionInitialization(const LXeDetectorConstruction* det);
+    LXeActionInitialization(LXeDetectorConstruction* det);
     virtual ~LXeActionInitialization();
 
     virtual void BuildForMaster() const;
@@ -48,7 +48,7 @@ class LXeActionInitialization : public G4VUserActionInitialization
 
   private:
 
-    const LXeDetectorConstruction* fDetector;
+    LXeDetectorConstruction* fDetector;
 };
 
 #endif

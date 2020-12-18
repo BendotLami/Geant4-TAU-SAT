@@ -41,7 +41,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 LXeActionInitialization::LXeActionInitialization(
-   const LXeDetectorConstruction* det)
+   LXeDetectorConstruction* det)
   : G4VUserActionInitialization(), fDetector(det)
 {}
 
@@ -68,7 +68,7 @@ void LXeActionInitialization::Build() const
   SetUserAction(new LXeStackingAction(eventAction));
 
   SetUserAction(new LXeRunAction());
-  SetUserAction(new LXeTrackingAction());
+  SetUserAction(new LXeTrackingAction(fDetector));
   SetUserAction(new LXeSteppingAction(eventAction));
 }
 
