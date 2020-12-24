@@ -43,6 +43,7 @@ LXeRun::LXeRun() : G4Run()
   fAbsorptionCount         = fAbsorptionCount2         = 0;
   fBoundaryAbsorptionCount = fBoundaryAbsorptionCount2 = 0;
   fPMTsAboveThreshold      = fPMTsAboveThreshold2      = 0;
+  fSilicon1eCounter = 0;
 
   fTotE = fTotE2 = 0.0;
 }
@@ -72,6 +73,7 @@ void LXeRun::Merge(const G4Run* run)
   fBoundaryAbsorptionCount2 += localRun->fBoundaryAbsorptionCount2;
   fTotE                     += localRun->fTotE;
   fTotE2                    += localRun->fTotE2;
+  fSilicon1eCounter         += localRun->fSilicon1eCounter;
 
   G4Run::Merge(run);
 }
@@ -150,6 +152,9 @@ void LXeRun::EndOfRun()
 
   G4cout << "Total energy deposition in scintillator per event:\t " << en/keV 
          << " +- " << rms_en/keV << " keV." << G4endl;
+
+  G4cout << "Silicon slab no. 1 electron count: "
+         << fSilicon1eCounter << G4endl;
 
   G4cout << G4endl;
   G4cout.precision(prec);

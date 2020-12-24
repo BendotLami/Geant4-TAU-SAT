@@ -62,6 +62,7 @@ LXeEventAction::LXeEventAction(const LXeDetectorConstruction* det)
   fAbsorptionCount = 0;
   fBoundaryAbsorptionCount = 0;
   fTotE = 0.0;
+  fSilicon1eCounter = 0;
 
   fConvPosSet = false;
   fEdepMax = 0.0;
@@ -83,6 +84,7 @@ void LXeEventAction::BeginOfEventAction(const G4Event*) {
   fAbsorptionCount = 0;
   fBoundaryAbsorptionCount = 0;
   fTotE = 0.0;
+  fSilicon1eCounter = 0;
 
   fConvPosSet = false;
   fEdepMax = 0.0;
@@ -223,6 +225,9 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
            << (fPhotonCount_Scint + fPhotonCount_Ceren -
                 fAbsorptionCount - fHitCount - fBoundaryAbsorptionCount)
            << G4endl;
+    G4cout << "Silicon slab no. 1 electron count: "
+           << fSilicon1eCounter
+           << G4endl;
   }
 
   // update the run statistics
@@ -236,6 +241,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
   run->IncAbsorption(fAbsorptionCount);
   run->IncBoundaryAbsorption(fBoundaryAbsorptionCount);
   run->IncHitsAboveThreshold(fPMTsAboveThreshold);
+  run->IncSilicon1eCounter(fSilicon1eCounter);
 
   //If we have set the flag to save 'special' events, save here
   if(fPhotonCount_Scint + fPhotonCount_Ceren <= fDetector->GetSaveThreshold())

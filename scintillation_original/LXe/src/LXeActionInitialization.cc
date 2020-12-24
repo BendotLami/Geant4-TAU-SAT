@@ -68,7 +68,7 @@ void LXeActionInitialization::Build() const
   SetUserAction(new LXeStackingAction(eventAction));
 
   SetUserAction(new LXeRunAction());
-  SetUserAction(new LXeTrackingAction(fDetector));
+  SetUserAction(new LXeTrackingAction(fDetector, eventAction));
   SetUserAction(new LXeSteppingAction(eventAction));
 }
 

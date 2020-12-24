@@ -32,6 +32,7 @@
 #include "LXeTrackingAction.hh"
 #include "LXeUserTrackInformation.hh"
 #include "LXeDetectorConstruction.hh"
+#include "LXeEventAction.hh"
 
 #include "G4TrackingManager.hh"
 #include "G4Track.hh"
@@ -41,9 +42,10 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeTrackingAction::LXeTrackingAction(LXeDetectorConstruction* detector)
+LXeTrackingAction::LXeTrackingAction(LXeDetectorConstruction* detector, LXeEventAction* eAction)
 {
   fDetector = detector;
+  fEventAction = eAction;
   fTargetRegion = 0;
 }
 

@@ -37,12 +37,13 @@
 class G4Region;
 class G4ParticleDefinition;
 class LXeDetectorConstruction;
+class LXeEventAction;
 
 class LXeTrackingAction : public G4UserTrackingAction {
 
   public:
 
-    LXeTrackingAction(LXeDetectorConstruction* detector);
+    LXeTrackingAction(LXeDetectorConstruction* detector, LXeEventAction* eAction);
     virtual ~LXeTrackingAction() {};
 
     virtual void PreUserTrackingAction(const G4Track*);
@@ -56,6 +57,7 @@ class LXeTrackingAction : public G4UserTrackingAction {
   private:
 
     LXeDetectorConstruction* fDetector;
+    LXeEventAction* fEventAction;
     G4Region* fTargetRegion;
     std::map<const G4ParticleDefinition*, int> fNParticleInTarget;
     std::map<const G4ParticleDefinition*, int> fNParticleInWorld;
