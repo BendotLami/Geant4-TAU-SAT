@@ -268,7 +268,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
                                                      "Target");   //its name
 
   new G4PVPlacement(0,                                      //no rotation
-                    G4ThreeVector(0., 0., -0.64 * 2. * cm), //at (0,0,0)
+                    vSilicon1Location, //at (0,0,0)
                     logicTarget,                            //its logical volume
                     "Target",
                     fExperimentalHall_log, //its mother  volume
@@ -416,6 +416,8 @@ void LXeDetectorConstruction::SetDefaults() {
   fMainVolumeOn = true;
   fMainVolume = nullptr;
   fSlab_z = 2.5*mm;
+
+  vSilicon1Location = G4ThreeVector(0., 0., -0.64 * 2. * cm);
 
   G4UImanager::GetUIpointer()
     ->ApplyCommand("/LXe/detector/scintYieldFactor 1.");

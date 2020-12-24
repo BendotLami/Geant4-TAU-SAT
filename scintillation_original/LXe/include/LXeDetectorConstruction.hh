@@ -110,6 +110,9 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
 
     G4Region* GetTargetRegion()  {return fRegion;}
 
+    G4ThreeVector GetvSilicon1Location() { return vSilicon1Location;}
+    G4ThreeVector GetvSilicon2Location() { return vSilicon2Location;}
+
   private:
 
     void DefineMaterials();
@@ -168,6 +171,9 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*   fLogicWorld;  
     G4Box*             fSolidWorld;
     G4Region*          fRegion;
+
+    G4ThreeVector vSilicon1Location;
+    G4ThreeVector vSilicon2Location;
 };
 
 #endif

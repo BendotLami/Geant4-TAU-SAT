@@ -36,12 +36,15 @@
 #include "G4TrackingManager.hh"
 #include "G4Track.hh"
 #include "G4ParticleTypes.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Box.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 LXeTrackingAction::LXeTrackingAction(LXeDetectorConstruction* detector)
 {
   fDetector = detector;
+  fTargetRegion = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -56,6 +59,7 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
 
     if(particleDefinition == G4Electron::Definition() || particleDefinition == G4Gamma::Definition())
     {
+      // std::cout << "ELECTRON IS ON BABY, SAVE BABY!" << std::endl;
         if(fTargetRegion == 0) // target region is initialized after detector construction instantiation
         {
             fTargetRegion = fDetector->GetTargetRegion();
@@ -71,7 +75,7 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
 
         for(int i = 0; i < N ; i++, it_logicalVolumeInRegion++)
         {
-            EInside test_status = (*it_logicalVolumeInRegion)->GetSolid()->Inside(position) ;
+            EInside test_status = (*it_logicalVolumeInRegion)->GetSolid()->Inside(position - fDetector->GetvSilicon1Location()) ;
             if(test_status == kInside)
             {
                 inside_target = true;
@@ -117,7 +121,7 @@ void LXeTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
   //Lets choose to draw only the photons that hit the sphere and a pmt
   if(aTrack->GetDefinition()==G4OpticalPhoton::OpticalPhotonDefinition()){
 
-    const G4VProcess* creator=aTrack->GetCreatorProcess();
+    // const G4VProcess* creator=aTrack->GetCreatorProcess();
     // if(creator && creator->GetProcessName()=="OpWLS"){
     //   trajectory->WLS();
     //   trajectory->SetDrawTrajectory(true);
