@@ -92,7 +92,8 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
 
         if(inside_target == true)
         {
-            fNParticleInTarget[particleDefinition]++;
+          fEventAction->IncSilicon1eCounter();
+          fNParticleInTarget[particleDefinition]++;
         }
         else
         {
