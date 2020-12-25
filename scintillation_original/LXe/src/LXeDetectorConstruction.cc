@@ -281,6 +281,26 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
   worldVisAtt1->SetVisibility(true);
   logicTarget->SetVisAttributes(worldVisAtt1);
 
+
+  G4LogicalVolume *logicTarget_2 = new G4LogicalVolume(targetSolid, //its solid
+                                                      fSiMaterial, //its material
+                                                      "Target");   //its name
+
+  new G4PVPlacement(0,                                      //no rotation
+                    vSilicon2Location, //at (0,0,0)
+                    logicTarget_2,                            //its logical volume
+                    "Target",
+                    fExperimentalHall_log, //its mother  volume
+                    0,
+                    false, //no boolean operation
+                    0);    //copy number
+
+  // Visualization attributes
+  worldVisAtt1 = new G4VisAttributes(G4Colour(1.0,0.0,0.0)); 
+  worldVisAtt1->SetVisibility(true);
+  logicTarget_2->SetVisAttributes(worldVisAtt1);
+
+
   // Create Target G4Region and add logical volume
   
   fRegion = new G4Region("Target");
@@ -295,6 +315,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
   
   fRegion->SetProductionCuts(cuts);
   fRegion->AddRootLogicalVolume(logicTarget); 
+  fRegion->AddRootLogicalVolume(logicTarget_2); 
 
 
   return fExperimentalHall_phys;
@@ -418,6 +439,7 @@ void LXeDetectorConstruction::SetDefaults() {
   fSlab_z = 2.5*mm;
 
   vSilicon1Location = G4ThreeVector(0., 0., -0.64 * 2. * cm);
+  vSilicon2Location = G4ThreeVector(0., 0., -0.64 * 4. * cm);
 
   G4UImanager::GetUIpointer()
     ->ApplyCommand("/LXe/detector/scintYieldFactor 1.");

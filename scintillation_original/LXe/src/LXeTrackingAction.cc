@@ -59,7 +59,7 @@ void LXeTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition();
     // track->GetDynamicParticle().GetDe
 
-    if(particleDefinition == G4Electron::Definition() || particleDefinition == G4Gamma::Definition())
+    if(particleDefinition == G4Electron::Definition()) //  || particleDefinition == G4Gamma::Definition())
     {
       // std::cout << "ELECTRON IS ON BABY, SAVE BABY!" << std::endl;
         if(fTargetRegion == 0) // target region is initialized after detector construction instantiation
@@ -73,16 +73,30 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
         std::vector<G4LogicalVolume*>::iterator it_logicalVolumeInRegion =
                 fTargetRegion->GetRootLogicalVolumeIterator();
 
-        bool inside_target = false;
+        bool inside_target_1 = false;
+        bool inside_target_2 = false;
 
         for(int i = 0; i < N ; i++, it_logicalVolumeInRegion++)
         {
-            EInside test_status = (*it_logicalVolumeInRegion)->GetSolid()->Inside(position - fDetector->GetvSilicon1Location()) ;
-            if(test_status == kInside)
+          if (i == 0)
+          {
+            EInside test_status = (*it_logicalVolumeInRegion)->GetSolid()->Inside(position - fDetector->GetvSilicon1Location());
+            if (test_status == kInside)
             {
-                inside_target = true;
-                break;
+              inside_target_1 = true;
+              break;
             }
+          }
+
+          if (i == 1)
+          {
+            EInside test_status = (*it_logicalVolumeInRegion)->GetSolid()->Inside(position - fDetector->GetvSilicon2Location());
+            if (test_status == kInside)
+            {
+              inside_target_2 = true;
+              break;
+            }
+          }
             /*
             else if (test_status == kSurface)
             {
@@ -90,9 +104,14 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
             */
         }
 
-        if(inside_target == true)
+        if(inside_target_1 == true)
         {
           fEventAction->IncSilicon1eCounter();
+          fNParticleInTarget[particleDefinition]++;
+        }
+        else if (inside_target_2 == true)
+        {
+          fEventAction->IncSilicon2eCounter();
           fNParticleInTarget[particleDefinition]++;
         }
         else

@@ -44,6 +44,7 @@ LXeRun::LXeRun() : G4Run()
   fBoundaryAbsorptionCount = fBoundaryAbsorptionCount2 = 0;
   fPMTsAboveThreshold      = fPMTsAboveThreshold2      = 0;
   fSilicon1eCounter = 0;
+  fSilicon2eCounter = 0;
 
   fTotE = fTotE2 = 0.0;
 }
@@ -74,6 +75,7 @@ void LXeRun::Merge(const G4Run* run)
   fTotE                     += localRun->fTotE;
   fTotE2                    += localRun->fTotE2;
   fSilicon1eCounter         += localRun->fSilicon1eCounter;
+  fSilicon2eCounter         += localRun->fSilicon2eCounter;
 
   G4Run::Merge(run);
 }
@@ -155,6 +157,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Silicon slab no. 1 electron count: "
          << fSilicon1eCounter << G4endl;
+  G4cout << "Silicon slab no. 2 electron count: "
+         << fSilicon2eCounter << G4endl;
 
   G4cout << G4endl;
   G4cout.precision(prec);

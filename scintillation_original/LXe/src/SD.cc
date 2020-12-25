@@ -102,10 +102,10 @@ G4bool B2TrackerSD::ProcessHits(G4Step* aStep,
       std::cout << "Exit Location: " << (aStep->GetTrack()->GetPosition()) << std::endl;
       G4cout << "Exit Location: " << (aStep->GetTrack()->GetPosition()) << /*aStep->GetTrack()->GetMaterial() <<*/ G4endl;
     }
-    if(gunParticleId == aStep->GetTrack()->GetTrackID())
-    {
-      std::cout << "Energyyyy: " << aStep->GetTrack()->GetKineticEnergy() / eV << std::endl;
-    }
+    // if(gunParticleId == aStep->GetTrack()->GetTrackID())
+    // {
+    //   std::cout << "Energyyyy: " << aStep->GetTrack()->GetKineticEnergy() / eV << std::endl;
+    // }
   }
 
   B2TrackerHit* newHit = new B2TrackerHit();

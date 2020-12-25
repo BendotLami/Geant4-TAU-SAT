@@ -61,6 +61,7 @@ class LXeEventAction : public G4UserEventAction
     void IncPhotonCount_Scint(){fPhotonCount_Scint++;}
     void IncPhotonCount_Ceren(){fPhotonCount_Ceren++;}
     void IncSilicon1eCounter(){fSilicon1eCounter++;}
+    void IncSilicon2eCounter(){fSilicon2eCounter++;}
     void IncEDep(G4double dep){fTotE+=dep;}
     void IncAbsorption(){fAbsorptionCount++;}
     void IncBoundaryAbsorption(){fBoundaryAbsorptionCount++;}
@@ -115,6 +116,7 @@ class LXeEventAction : public G4UserEventAction
     G4int fAbsorptionCount;
     G4int fBoundaryAbsorptionCount;
     G4int fSilicon1eCounter;
+    G4int fSilicon2eCounter;
 
     G4double fTotE;
 

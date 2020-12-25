@@ -102,7 +102,7 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
   if(theTrack->GetParentID()==0){
     //This is a primary track
     #include "G4SystemOfUnits.hh"
-    std::cout << "test: " << theTrack->GetKineticEnergy()/eV << std::endl;
+    // std::cout << "test: " << theTrack->GetKineticEnergy()/eV << std::endl;
  
     G4TrackVector* fSecondary=fpSteppingManager->GetfSecondary();
     G4int tN2ndariesTot = fpSteppingManager->GetfN2ndariesAtRestDoIt()

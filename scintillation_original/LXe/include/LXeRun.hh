@@ -55,6 +55,9 @@ class LXeRun : public G4Run
     void IncSilicon1eCounter(G4int count) {
       fSilicon1eCounter  += count;
     }
+    void IncSilicon2eCounter(G4int count) {
+      fSilicon2eCounter  += count;
+    }
     void IncEDep(G4double dep) {
       fTotE  += dep;
       fTotE2 += dep*dep;
@@ -89,6 +92,7 @@ class LXeRun : public G4Run
     G4int fBoundaryAbsorptionCount, fBoundaryAbsorptionCount2;
     G4int fPMTsAboveThreshold, fPMTsAboveThreshold2;
     G4int fSilicon1eCounter;
+    G4int fSilicon2eCounter;
 
     G4double fTotE, fTotE2;
 };
