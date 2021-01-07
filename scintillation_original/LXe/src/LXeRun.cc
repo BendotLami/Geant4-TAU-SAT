@@ -32,8 +32,25 @@
 
 #include "LXeRun.hh"
 #include "G4SystemOfUnits.hh"
+#include <iostream>
+#include <fstream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+static std::ofstream outFile;
+
+void FW_CloseFile()
+{
+    if(outFile.is_open())
+        outFile.close();
+}
+
+void FW_OpenFile(std::string name)
+{
+    FW_CloseFile();
+    outFile.open(name, std::ios_base::app);
+    outFile << "### NEW RUN RESULTS: ###" << std::endl;
+}
 
 LXeRun::LXeRun() : G4Run()
 {
@@ -100,6 +117,9 @@ void LXeRun::EndOfRun()
   G4cout << "Number of hits per event:\t " << hits << " +- " << rms_hits 
          << G4endl;
 
+  outFile << "Number of hits per event:\t " << hits << " +- " << rms_hits 
+         << std::endl;
+
   G4double hitsAbove = G4double(fPMTsAboveThreshold)/n_evt;
   G4double hitsAbove2 = G4double(fPMTsAboveThreshold2)/n_evt;
   G4double rms_hitsAbove = hitsAbove2 - hitsAbove*hitsAbove;
@@ -109,6 +129,9 @@ void LXeRun::EndOfRun()
   G4cout << "Number of hits per event above threshold:\t " << hitsAbove 
          << " +- " << rms_hitsAbove << G4endl;
 
+  outFile << "Number of hits per event above threshold:\t " << hitsAbove 
+         << " +- " << rms_hitsAbove << std::endl;
+
   G4double scint = G4double(fPhotonCount_Scint)/n_evt;
   G4double scint2 = G4double(fPhotonCount_Scint2)/n_evt;
   G4double rms_scint = scint2 - scint*scint;
@@ -117,6 +140,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of scintillation photons per event :\t " << scint << " +- "
          << rms_scint << G4endl;
+  outFile << "Number of scintillation photons per event :\t " << scint << " +- "
+         << rms_scint << std::endl;
 
   G4double ceren = G4double(fPhotonCount_Ceren)/n_evt;
   G4double ceren2 = G4double(fPhotonCount_Ceren2)/n_evt;
@@ -135,6 +160,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of absorbed photons per event :\t " << absorb << " +- " 
          << rms_absorb << G4endl;
+  outFile << "Number of absorbed photons per event :\t " << absorb << " +- " 
+         << rms_absorb << std::endl;
 
   G4double bdry = G4double(fBoundaryAbsorptionCount)/n_evt;
   G4double bdry2 = G4double(fBoundaryAbsorptionCount2)/n_evt;
@@ -144,6 +171,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of photons absorbed at boundary per event:\t " << bdry 
          << " +- " << rms_bdry << G4endl;
+  outFile << "Number of photons absorbed at boundary per event:\t " << bdry 
+         << " +- " << rms_bdry << std::endl;
   //G4cout << "Number of unaccounted for photons: " << G4endl;
 
   G4double en = fTotE/n_evt;
@@ -154,11 +183,18 @@ void LXeRun::EndOfRun()
 
   G4cout << "Total energy deposition in scintillator per event:\t " << en/keV 
          << " +- " << rms_en/keV << " keV." << G4endl;
+  outFile << "Total energy deposition in scintillator per event:\t " << en/keV 
+         << " +- " << rms_en/keV << " keV." << std::endl;
 
   G4cout << "Silicon slab no. 1 electron count: "
          << fSilicon1eCounter << G4endl;
   G4cout << "Silicon slab no. 2 electron count: "
          << fSilicon2eCounter << G4endl;
+
+  outFile << "Silicon slab no. 1 electron count: "
+         << fSilicon1eCounter << std::endl;
+  outFile << "Silicon slab no. 2 electron count: "
+         << fSilicon2eCounter << std::endl;
 
   G4cout << G4endl;
   G4cout.precision(prec);

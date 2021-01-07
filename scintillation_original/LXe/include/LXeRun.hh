@@ -38,6 +38,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void FW_CloseFile();
+void FW_OpenFile(std::string name);
+
 class LXeRun : public G4Run
 {
   public:

@@ -51,11 +51,14 @@
 #include "G4UIExecutive.hh"
 
 #include "LXePhysics.hh"
+#include "LXeRun.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc, char** argv)
 {
+  FW_OpenFile("test.txt");
+
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = nullptr;
   if (argc == 1) { ui = new G4UIExecutive(argc,argv); }
@@ -112,6 +115,8 @@ int main(int argc, char** argv)
     G4String fileName = argv[1];
     UImanager->ApplyCommand(command+fileName);
   }
+
+  FW_CloseFile();
 
   // job termination
   delete visManager;
