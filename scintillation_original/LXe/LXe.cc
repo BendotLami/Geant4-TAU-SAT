@@ -52,12 +52,13 @@
 
 #include "LXePhysics.hh"
 #include "LXeRun.hh"
+#include "FilePrinter.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc, char** argv)
 {
-  FW_OpenFile("test.txt");
+  auto f = FilePrinter("test.txt"); // destructor will take care of the rest
 
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = nullptr;
@@ -115,8 +116,6 @@ int main(int argc, char** argv)
     G4String fileName = argv[1];
     UImanager->ApplyCommand(command+fileName);
   }
-
-  FW_CloseFile();
 
   // job termination
   delete visManager;

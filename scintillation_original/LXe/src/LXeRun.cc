@@ -34,24 +34,9 @@
 #include "G4SystemOfUnits.hh"
 #include <iostream>
 #include <fstream>
+#include "FilePrinter.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-static std::ofstream outFile;
-
-void FW_CloseFile()
-{
-    if(outFile.is_open())
-        outFile.close();
-}
-
-void FW_OpenFile(std::string name)
-{
-    FW_CloseFile();
-    outFile.open(name, std::ios_base::app);
-    outFile << "### NEW RUN RESULTS: ###" << std::endl;
-}
-
 LXeRun::LXeRun() : G4Run()
 {
   fHitCount                = fHitCount2                = 0;
@@ -101,6 +86,7 @@ void LXeRun::Merge(const G4Run* run)
 
 void LXeRun::EndOfRun()
 {
+  std::ofstream& outFile = FilePrinter::GetFileStream();
   G4cout << "\n ======================== run summary ======================\n";
 
   G4int prec = G4cout.precision();
