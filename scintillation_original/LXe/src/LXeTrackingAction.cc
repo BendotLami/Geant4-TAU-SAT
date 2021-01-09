@@ -58,10 +58,8 @@ void LXeTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition();
     // track->GetDynamicParticle().GetDe
-
     if(particleDefinition == G4Electron::Definition()) //  || particleDefinition == G4Gamma::Definition())
     {
-      // std::cout << "ELECTRON IS ON BABY, SAVE BABY!" << std::endl;
         if(fTargetRegion == 0) // target region is initialized after detector construction instantiation
         {
             fTargetRegion = fDetector->GetTargetRegion();

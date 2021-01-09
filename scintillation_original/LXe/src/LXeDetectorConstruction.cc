@@ -259,7 +259,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
   G4double TargetSizeX = 63.*mm;
   G4double TargetSizeY = 63.*mm;
 
-  G4Box* targetSolid = new G4Box("Target",				     //its name
+  G4Box* targetSolid = new G4Box("Silicon_1",				     //its name
 				 TargetSizeX/2,TargetSizeY/2,TargetSizeZ/2);   //its size
 
 
@@ -281,8 +281,10 @@ G4VPhysicalVolume* LXeDetectorConstruction::Construct(){
   worldVisAtt1->SetVisibility(true);
   logicTarget->SetVisAttributes(worldVisAtt1);
 
+  G4Box* targetSolid_2 = new G4Box("Silicon_2",				     //its name
+				 TargetSizeX/2,TargetSizeY/2,TargetSizeZ/2);   //its size
 
-  G4LogicalVolume *logicTarget_2 = new G4LogicalVolume(targetSolid, //its solid
+  G4LogicalVolume *logicTarget_2 = new G4LogicalVolume(targetSolid_2, //its solid
                                                       fSiMaterial, //its material
                                                       "Target");   //its name
 
@@ -357,7 +359,7 @@ void LXeDetectorConstruction::ConstructSDandField() {
     fScint_SD.Put(scint_SD);
   }
   G4SDManager::GetSDMpointer()->AddNewDetector(fScint_SD.Get());
-  SetSensitiveDetector(fMainVolume->GetLogScint(), fScint_SD.Get());
+  SetSensitiveDetector("scint_log", fScint_SD.Get(), true);
 
   G4String trackerChamberSDname = "B2/TrackerChamberSD";
   B2TrackerSD* aTrackerSD = new B2TrackerSD(trackerChamberSDname,

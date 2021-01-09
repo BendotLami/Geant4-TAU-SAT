@@ -35,6 +35,7 @@
 #include "G4ios.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4VSolid.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -68,39 +69,39 @@ void B2TrackerSD::Initialize(G4HCofThisEvent* hce)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+static G4int gunParticleId = -1; // will contain the id of the first particle
 
 G4bool B2TrackerSD::ProcessHits(G4Step* aStep, 
                                      G4TouchableHistory*)
 {  
   // energy deposit
   G4double edep = aStep->GetTotalEnergyDeposit();
-  // std::cout << "energy deposit: " << edep << ", " << aStep->GetNonIonizingEnergyDeposit() << std::endl;
 
   G4StepPoint* preStep = aStep->GetPreStepPoint();
 
   if (edep==0.) return false;
 
   {
-    static G4int gunParticleId = -1;
-    // if(gunParticleId == -1)
-    // gunParticleId = aStep->GetTrack()->GetTrackID();
-
-    if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary)
+    if(gunParticleId == -1)
     {
-      G4cout << "Enter Location: " << (aStep->GetTrack()->GetPosition()) << /*aStep->GetTrack()->GetMaterial() <<*/ G4endl;
       gunParticleId = aStep->GetTrack()->GetTrackID();
-      G4cout << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
-      std::cout << "Energy at enter: " << aStep->GetTrack()->GetDynamicParticle()->GetKineticEnergy() / eV << std::endl;
-      // std::cout << "type: " << aStep->GetTrack()->GetDynamicParticle()->GetParticleDefinition()->GetParticleTable()-> << std::endl;
-      std::cout << "number: " << aStep->GetTrack()->GetDynamicParticle()->GetParticleDefinition()->GetAtomicNumber() << std::endl;
-      std::cout << "mass: " << aStep->GetTrack()->GetDynamicParticle()->GetParticleDefinition()->GetPDGMass()/proton_mass_c2 << std::endl;
-      std::cout << "charge: " << aStep->GetTrack()->GetDynamicParticle()->GetCharge() << std::endl;
+            std::cout << gunParticleId << std::endl;
+    }
 
+
+    if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary && aStep->GetTrack()->GetTrackID() == gunParticleId)
+    {
+      G4cout << "Enter Location: " << (aStep->GetTrack()->GetPosition()) << G4endl;
+      G4cout << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
+      G4cout << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetSolid()->GetName() << G4endl;
+      // std::cout << "Energy at enter: " << aStep->GetTrack()->GetDynamicParticle()->GetKineticEnergy() / eV << std::endl;
+      // std::cout << "number: " << aStep->GetTrack()->GetDynamicParticle()->GetParticleDefinition()->GetAtomicNumber() << std::endl;
+      // std::cout << "mass: " << aStep->GetTrack()->GetDynamicParticle()->GetParticleDefinition()->GetPDGMass()/proton_mass_c2 << std::endl;
+      // std::cout << "charge: " << aStep->GetTrack()->GetDynamicParticle()->GetCharge() << std::endl;
     }
     if (aStep->IsLastStepInVolume() && gunParticleId == aStep->GetTrack()->GetTrackID())
     {
-      std::cout << "Exit Location: " << (aStep->GetTrack()->GetPosition()) << std::endl;
-      G4cout << "Exit Location: " << (aStep->GetTrack()->GetPosition()) << /*aStep->GetTrack()->GetMaterial() <<*/ G4endl;
+      G4cout << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
     }
     // if(gunParticleId == aStep->GetTrack()->GetTrackID())
     // {
@@ -134,6 +135,7 @@ void B2TrackerSD::EndOfEvent(G4HCofThisEvent*)
             << " hits in the tracker chambers: " << G4endl;
      for ( G4int i=0; i<nofHits; i++ ) (*fHitsCollection)[i]->Print();
   }
+  gunParticleId = -1;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

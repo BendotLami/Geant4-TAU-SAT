@@ -67,10 +67,33 @@ void LXeScintSD::Initialize(G4HCofThisEvent* hitsCE){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+static G4int gunParticleId = -1; // will contain the id of the first particle
 
 G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
   G4double edep = aStep->GetTotalEnergyDeposit();
   if(edep==0.) return false; //No edep so dont count as hit
+
+  {
+    if(gunParticleId == -1)
+    {
+      gunParticleId = aStep->GetTrack()->GetTrackID();
+      std::cout << gunParticleId << std::endl;
+    }
+
+    G4StepPoint* preStep = aStep->GetPreStepPoint();
+
+    if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary && aStep->GetTrack()->GetTrackID() == gunParticleId)
+    {
+      G4cout << "Enter Location: " << (preStep->GetPosition()) << G4endl;
+      G4cout << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
+      G4cout << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
+    }
+
+    if (aStep->IsLastStepInVolume() && gunParticleId == aStep->GetTrack()->GetTrackID())
+    {
+      G4cout << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
+    }
+  }
 
   G4StepPoint* thePrePoint = aStep->GetPreStepPoint();
   G4TouchableHistory* theTouchable =
@@ -95,7 +118,10 @@ G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::EndOfEvent(G4HCofThisEvent* ) {}
+void LXeScintSD::EndOfEvent(G4HCofThisEvent *)
+{
+  gunParticleId = -1;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
