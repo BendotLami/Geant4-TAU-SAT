@@ -358,10 +358,13 @@ void LXeMainVolume::SurfaceProperties(){
   assert(sizeof(photocath_ReR) == sizeof(ephoton));
   G4double photocath_ImR[]={1.69,1.69};
   assert(sizeof(photocath_ImR) == sizeof(ephoton));
+  G4double photocath_Reflectivity[]={0.,0.};
+  assert(sizeof(photocath_Reflectivity) == sizeof(ephoton));
   G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
   photocath_mt->AddProperty("EFFICIENCY",ephoton,photocath_EFF,num);
   photocath_mt->AddProperty("REALRINDEX",ephoton,photocath_ReR,num);
   photocath_mt->AddProperty("IMAGINARYRINDEX",ephoton,photocath_ImR,num);
+  photocath_mt->AddProperty("REFLECTIVITY", ephoton, photocath_Reflectivity, num);
   G4OpticalSurface* photocath_opsurf=
     new G4OpticalSurface("photocath_opsurf",glisur,polished,
                          dielectric_metal);
