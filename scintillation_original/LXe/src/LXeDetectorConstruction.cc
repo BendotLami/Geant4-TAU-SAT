@@ -337,8 +337,16 @@ void LXeDetectorConstruction::ConstructSDandField() {
     LXePMTSD* pmt_SD = new LXePMTSD("/LXeDet/pmtSD");
     fPmt_SD.Put(pmt_SD);
 
-    pmt_SD->InitPMTs((fNx*fNy+fNx*fNz+fNy*fNz)*2); //let pmtSD know # of pmts
-    pmt_SD->SetPmtPositions(fMainVolume->GetPmtPositions());
+    pmt_SD->InitPMTs((4)*2); //let pmtSD know # of pmts
+    std::vector<G4ThreeVector> total = fMainVolume->GetPmtPositions();
+    // total.reserve(fMainVolume->GetPmtPositions().size() + fMainVolume2->GetPmtPositions().size());
+    // total.insert(total.end(), fMainVolume->GetPmtPositions().begin(), fMainVolume->GetPmtPositions().end());
+    auto a = fMainVolume2->GetPmtPositions();
+    total.insert(total.end(), a.begin(), a.end());
+    // pmt_SD->SetPmtPositions(fMainVolume->GetPmtPositions());
+    // pmt_SD->SetPmtPositions(fMainVolume2->GetPmtPositions());
+    G4cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " << total.size() << G4endl;
+    pmt_SD->SetPmtPositions(total);
   }
   G4SDManager::GetSDMpointer()->AddNewDetector(fPmt_SD.Get());
   //sensitive detector is not actually on the photocathode.
@@ -350,6 +358,7 @@ void LXeDetectorConstruction::ConstructSDandField() {
   //reset at the begining of events
 
   SetSensitiveDetector(fMainVolume->GetLogPhotoCath(), fPmt_SD.Get());
+  SetSensitiveDetector(fMainVolume2->GetLogPhotoCath(), fPmt_SD.Get());
 
   // Scint SD
 

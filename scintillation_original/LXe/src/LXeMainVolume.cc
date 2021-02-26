@@ -181,7 +181,7 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
   // G4double xmin = -fScint_x/2. - dx/2.;
   // G4double ymin = -fScint_y/2. - dy/2.;
   // G4double zmin = -fScint_z/2. - dz/2.;
-  G4int k = 0;
+  static G4int k = 0;
 
   G4RotationMatrix *rm;
   G4ThreeVector offset;
@@ -232,6 +232,8 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
 
   fAntiReflectivity_log = new G4LogicalVolume(fAntiReflectivity, G4Material::GetMaterial("Al"),
                                               "antiref_log");
+
+                                            
   rm = new G4RotationMatrix();
   rm->rotateX(90 * deg);
   new G4PVPlacement(rm, G4ThreeVector(0, fScint_y/2 + (height_pmt),  0), fAntiReflectivity_log, "antiref",

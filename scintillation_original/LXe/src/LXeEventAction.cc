@@ -234,6 +234,17 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
            << fSilicon2eCounter
            << G4endl;
   }
+  if (pmtHC)
+  {
+    G4int pmts = pmtHC->entries();
+    //Gather info from all PMTs
+    G4cout << (*pmtHC).GetVector()->size() << G4endl;
+    for (G4int i = 0; i < pmts; i++)
+    {
+      G4cout << (*pmtHC)[i]->GetPMTPos() << G4endl;
+      G4cout << "test1: " << (*pmtHC)[i]->GetPMTPhysVol()->GetTranslation() << " | " << (*pmtHC)[i]->GetPhotonCount() << G4endl;
+    }
+  }
 
   // update the run statistics
   LXeRun* run = static_cast<LXeRun*>(
