@@ -234,6 +234,8 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
            << fSilicon2eCounter
            << G4endl;
   }
+  std::vector<G4int> pmts_vec;
+  pmts_vec.resize(NUM_OF_PMTS);
   if (pmtHC)
   {
     G4int pmts = pmtHC->entries();
@@ -243,6 +245,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
     {
       G4cout << (*pmtHC)[i]->GetPMTPos() << G4endl;
       G4cout << "PMT-DATA: " << (*pmtHC)[i]->GetPMTPhysVol()->GetInstanceID() << " | " << (*pmtHC)[i]->GetPMTPhysVol()->GetTranslation() << " | " << (*pmtHC)[i]->GetPhotonCount() << G4endl;
+      pmts_vec[i] = (*pmtHC)[i]->GetPhotonCount();
     }
   }
 
@@ -259,6 +262,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
   run->IncHitsAboveThreshold(fPMTsAboveThreshold);
   run->IncSilicon1eCounter(fSilicon1eCounter);
   run->IncSilicon2eCounter(fSilicon2eCounter);
+  run->IncPMTS(pmts_vec);
 
   //If we have set the flag to save 'special' events, save here
   if(fPhotonCount_Scint + fPhotonCount_Ceren <= fDetector->GetSaveThreshold())

@@ -36,6 +36,8 @@
 #include "G4Run.hh"
 #include "globals.hh"
 
+#define NUM_OF_PMTS (8)
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 class LXeRun : public G4Run
 {
@@ -78,6 +80,14 @@ class LXeRun : public G4Run
       fPMTsAboveThreshold2 += count*count;
     }
 
+    void IncPMTS(std::vector<G4int> &pmts)
+    {
+      for (size_t i = 0; i < NUM_OF_PMTS; i++)
+      {
+        PMT[i] += pmts[i];
+      }
+    }
+
     virtual void Merge(const G4Run* run);
 
     void EndOfRun();
@@ -92,6 +102,7 @@ class LXeRun : public G4Run
     G4int fPMTsAboveThreshold, fPMTsAboveThreshold2;
     G4int fSilicon1eCounter;
     G4int fSilicon2eCounter;
+    std::vector<G4int> PMT;
 
     G4double fTotE, fTotE2;
 };

@@ -48,6 +48,8 @@ LXeRun::LXeRun() : G4Run()
   fSilicon1eCounter = 0;
   fSilicon2eCounter = 0;
 
+  PMT.resize(NUM_OF_PMTS);
+
   fTotE = fTotE2 = 0.0;
 }
 
@@ -78,6 +80,12 @@ void LXeRun::Merge(const G4Run* run)
   fTotE2                    += localRun->fTotE2;
   fSilicon1eCounter         += localRun->fSilicon1eCounter;
   fSilicon2eCounter         += localRun->fSilicon2eCounter;
+
+  for (size_t i = 0; i < NUM_OF_PMTS; i++)
+  {
+         PMT[i] += localRun->PMT[i];
+  }
+  
 
   G4Run::Merge(run);
 }
@@ -181,6 +189,19 @@ void LXeRun::EndOfRun()
          << fSilicon1eCounter << std::endl;
   outFile << "Silicon slab no. 2 electron count: "
          << fSilicon2eCounter << std::endl;
+
+  {
+         std::vector<G4String> scint_loc;
+         scint_loc.resize(4);
+         scint_loc[0] = "Top-Left";
+         scint_loc[1] = "Bottom-Right";
+         scint_loc[2] = "Top-Right";
+         scint_loc[3] = "Bottom-Left";
+         for (size_t i = 0; i < NUM_OF_PMTS; i++)
+         {
+                outFile << "Scintillator " << (i / 4) + 1 << ", PMT " << i << " (" << scint_loc[i % 4] << "): " << PMT[i] << std::endl;
+         }
+  }
 
   G4cout << G4endl;
   G4cout.precision(prec);
