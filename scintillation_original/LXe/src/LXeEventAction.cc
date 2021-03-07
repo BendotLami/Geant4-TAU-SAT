@@ -242,7 +242,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
     for (G4int i = 0; i < pmts; i++)
     {
       G4cout << (*pmtHC)[i]->GetPMTPos() << G4endl;
-      G4cout << "test1: " << (*pmtHC)[i]->GetPMTPhysVol()->GetTranslation() << " | " << (*pmtHC)[i]->GetPhotonCount() << G4endl;
+      G4cout << "PMT-DATA: " << (*pmtHC)[i]->GetPMTPhysVol()->GetInstanceID() << " | " << (*pmtHC)[i]->GetPMTPhysVol()->GetTranslation() << " | " << (*pmtHC)[i]->GetPhotonCount() << G4endl;
     }
   }
 
