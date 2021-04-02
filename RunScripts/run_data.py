@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 import re
+import csv
 
 MOTHER_FOLDER = '/runs/'
 INPUT_FILE_NAME = 'input.txt'
@@ -19,13 +20,14 @@ def make_dir(path):
 
 
 def get_locations(content, i, res):
+    global NUMBER_OF_SLABS
     old_len = len(res)
     NUMBER_OF_SLABS -= 1
     while i < len(content):
         i += 1
         if "Enter Location" in content[i] or "Exit Location" in content[i]:
             res.append(re.findall(r"[-+]?\d*\.\d+|\d+", content[i]))
-        else if "Particle Volume" in content[i] or "Number of" in content[i]:
+        elif "Particle Volume" in content[i] or "Number of" in content[i]:
             break
     if len(res) < old_len+2: # in case the particle stopped in this slab
         res.append(['-','-','-'])
@@ -33,6 +35,7 @@ def get_locations(content, i, res):
 
 
 def add_missing_slabs(res):
+    global NUMBER_OF_SLABS
     while NUMBER_OF_SLABS < 0:
         res.append(['-','-','-'])
         res.append(['-','-','-'])
@@ -45,15 +48,16 @@ def get_particle_count(line, loc):
 
 
 def get_scientific_number(line):
-    match_number = re.compile('-?\ *[0-9]+\.?[0-9]*(?:[Ee]\ *[-+]?\ *[0-9]+)?')
+    match_number = re.compile(r"-?[0-9]+\.?[0-9]*(?:[Ee][-+]?[0-9]+)?")
     final_list = [float(x) for x in re.findall(match_number, line)]
     return final_list[0]
+
 
 def get_run_data(run_dir):
     res = list()
     with open("{}/{}".format(run_dir, OUTPUT_FILE_NAME), 'r') as output_file:
         file_lines = output_file.readlines()
-    content = [[line.rstrip('\n') for line in file_lines]
+    content = [line.rstrip('\n') for line in file_lines]
     i = 0
     while i < len(content):
         # Getting locations
@@ -62,11 +66,11 @@ def get_run_data(run_dir):
             continue
         # Check if there are untouchable slabs
         add_missing_slabs(res)
-        else if "Number of hits per event:" in content[i]:
+        if "Number of hits per event:" in content[i]:
             res.append(get_scientific_number(content[i]))
-        else if "Silicon slab no." in content[i]:
+        elif "Silicon slab no." in content[i]:
             res.append(get_particle_count(content[i], 1))
-        else if "Scintillator" in content[i]:
+        elif "Scintillator" in content[i]:
             res.append(get_particle_count(content[i], 2))
         i += 1
 
@@ -81,25 +85,25 @@ if __name__ == "__main__":
 
     simulation_data = list()
     for run_dir, _, filename in os.walk(os.getcwd()):
-        if filename == [INPUT_FILE_NAME]:
+        if INPUT_FILE_NAME in filename:
             os.chdir(run_dir)
-            with open("run_stdout.txt", 'w') as out_fd:
-                subprocess.run([GEANT_EXE_LOCATION, INPUT_FILE_NAME], stdout=out_fd)
+            # with open("run_stdout.txt", 'w') as out_fd:
+            #     subprocess.run([GEANT_EXE_LOCATION, INPUT_FILE_NAME], stdout=out_fd)
             simulation_data.append(get_run_data(run_dir))
             print('Debug: extracted the following data: \n {}'.format(simulation_data[len(simulation_data)-1]))
     
-    with open("{}mapping.csv".format(MOTHER_FOLDER),'r') as csvinput:
-        with open("{}final_results.csv".format(MOTHER_FOLDER), 'w') as csvoutput:
+    with open("{}/mapping.csv".format(save_path),'r') as csvinput:
+        with open("{}/final_results.csv".format(save_path), 'w') as csvoutput:
             writer = csv.writer(csvoutput, lineterminator='\n')
             reader = csv.reader(csvinput)
 
             output_lines = []
             row = next(reader)
-            row.append(['Silicon_2 enter location', 'Silicon_2 exit location', 'Silicon_1 enter location', 'Silicon_1 exit location', 'Scint_1 enter location', 'Scint_1 exit location', 'Scint_2 enter location', 'Scint_2 exit location', 'Number of photons created', 'Number of electron-hole pairs created', 'Photons absorbed in Scint_1 Top-Left', 'Photons absorbed in Scint_1 Bottom-Right', 'Photons absorbed in Scint_1 Top-Right', 'Photons absorbed in Scint_1 Bottom-Left', 'Photons absorbed in Scint_2 Top-Left', 'Photons absorbed in Scint_2 Bottom-Right', 'Photons absorbed in Scint_2 Top-Right', 'Photons absorbed in Scint_2 Bottom-Left'])
+            row.extend(['Silicon_2 enter location', 'Silicon_2 exit location', 'Silicon_1 enter location', 'Silicon_1 exit location', 'Scint_1 enter location', 'Scint_1 exit location', 'Scint_2 enter location', 'Scint_2 exit location', 'Number of photons created', 'Number of electron-hole pairs created', 'Photons absorbed in Scint_1 Top-Left', 'Photons absorbed in Scint_1 Bottom-Right', 'Photons absorbed in Scint_1 Top-Right', 'Photons absorbed in Scint_1 Bottom-Left', 'Photons absorbed in Scint_2 Top-Left', 'Photons absorbed in Scint_2 Bottom-Right', 'Photons absorbed in Scint_2 Top-Right', 'Photons absorbed in Scint_2 Bottom-Left'])
             output_lines.append(row)
-
+            print(simulation_data)
             for i,row in enumerate(reader):
-                row.extend(simulation_data)
+                row.extend(simulation_data[i])
                 output_lines.append(row)
 
             writer.writerows(output_lines)
