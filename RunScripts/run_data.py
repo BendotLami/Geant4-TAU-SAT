@@ -3,6 +3,7 @@ import sys
 import subprocess
 import re
 import csv
+import pathlib
 
 MOTHER_FOLDER = '/runs/'
 INPUT_FILE_NAME = 'input.txt'
@@ -52,6 +53,10 @@ def get_scientific_number(line):
     final_list = [float(x) for x in re.findall(match_number, line)]
     return final_list[0]
 
+def init_number_of_slabs():
+    global NUMBER_OF_SLABS
+    NUMBER_OF_SLABS = 4
+
 
 def get_run_data(run_dir):
     res = list()
@@ -60,7 +65,6 @@ def get_run_data(run_dir):
         content = [line.rstrip('\n') for line in file_lines]
     i = 1
     while i < len(content):
-        print('current line: {}'.format(content[i]))
         # Getting locations
         if "Particle Volume" in content[i]:
             i = get_locations(content, i, res)
@@ -74,17 +78,21 @@ def get_run_data(run_dir):
         elif "Scintillator" in content[i]:
             res.append(get_particle_count(content[i], 2))
         i += 1
+    init_number_of_slabs()
     return res
 
 
 def get_run_number(run_dir):
-    # BEN LAMI ADD YOUR CODE HERE #
-    pass
+    path = pathlib.PurePath(run_dir)
+    print(path.name)
+    return int(path.name)
+
 
 if __name__ == "__main__":
     save_path = sys.argv[1]
     if os.path.exists(save_path):
         os.chdir(save_path)
+        save_path = str(pathlib.Path().absolute())
         MOTHER_FOLDER = save_path + MOTHER_FOLDER
     else:
         exit(1)
@@ -98,7 +106,9 @@ if __name__ == "__main__":
             run_number = get_run_number(run_dir)
             simulation_data[run_number] = get_run_data(run_dir)
             print('Debug: extracted the following data: \n {}'.format(simulation_data[run_number]))
-    
+
+    os.chdir(save_path)  # return to script folder
+
     with open("{}/mapping.csv".format(save_path),'r') as csvinput:
         with open("{}/final_results.csv".format(save_path), 'w') as csvoutput:
             writer = csv.writer(csvoutput, lineterminator='\n')
@@ -108,12 +118,12 @@ if __name__ == "__main__":
             row = next(reader)
             row.extend(['Silicon_2 enter location', 'Silicon_2 exit location', 'Silicon_1 enter location', 'Silicon_1 exit location', 'Scint_1 enter location', 'Scint_1 exit location', 'Scint_2 enter location', 'Scint_2 exit location', 'Number of photons created', 'Number of electron-hole pairs created in Silicon_1', 'Number of electron-hole pairs created in Silicon_2', 'Photons absorbed in Scint_1 Top-Left', 'Photons absorbed in Scint_1 Bottom-Right', 'Photons absorbed in Scint_1 Top-Right', 'Photons absorbed in Scint_1 Bottom-Left', 'Photons absorbed in Scint_2 Top-Left', 'Photons absorbed in Scint_2 Bottom-Right', 'Photons absorbed in Scint_2 Top-Right', 'Photons absorbed in Scint_2 Bottom-Left'])
             output_lines.append(row)
-            print(simulation_data)
             for run_number, row in enumerate(reader):
-                if run_number in simulation_data:
-                    row.extend(simulation_data[run_number])
+                actual_run_number = run_number + 1
+                if actual_run_number in simulation_data:
+                    row.extend(simulation_data[actual_run_number])
                 else:
-                    print('Can\'t find output data for run number: {}'.format(run_number))
+                    print('Can\'t find output data for run number: {}'.format(actual_run_number))
                 output_lines.append(row)
 
             writer.writerows(output_lines)
