@@ -32,11 +32,11 @@ def create_input_file(filepath, particle: str, ion: str, energy: str,
         f.write("/run/beamOn 1\n")
 
 def create_runs():
-    energies = [100,150,200,250,300,400,500,600,700,800,900,1000]  # in MeV
-    positions = [(0, 0, -20)]
+    energies = [1,100,200,500,1000,5000,20000,50000,80000,100000]  # in MeV
+    positions = [(0, 0, -2)]
     directions = [(0, 0, 1)]
-    particles = ["proton", "e-", "ion"]
-    ions = [(3, 6, 3), (4, 8, 4), (10, 20, 10)]
+    particles = ["proton", "e-", "e+", "gamma", "neutron", "ion"]
+    ions = [(2, 4, 2), (6, 12, 6), (8, 16, 8), (26, 52, 26)]
 
     with open("mapping.csv", 'w', newline='') as map_file:
         run_writer = csv.writer(map_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -61,11 +61,11 @@ def create_runs():
 
 if __name__=="__main__":
     save_path = sys.argv[1]
-    # if os.path.exists(save_path):
-    #     os.chdir(save_path)
-    #     MOTHER_FOLDER = save_path + MOTHER_FOLDER
-    # else:
-    #     exit(1)
+    if os.path.exists(save_path):
+        os.chdir(save_path)
+        MOTHER_FOLDER = save_path + MOTHER_FOLDER
+    else:
+        exit(1)
 
-    # make_dir(MOTHER_FOLDER)
-    # create_runs()
+    make_dir(MOTHER_FOLDER)
+    create_runs()
