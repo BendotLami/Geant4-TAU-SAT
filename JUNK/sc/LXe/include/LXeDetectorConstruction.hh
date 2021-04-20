@@ -147,7 +147,9 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     LXeMainVolume* fMainVolume2;
     LXeMainVolume* fMainVolume3;
     LXeMainVolume* fMainVolume4;
-    LXeMainVolume* fMainVolume5;
+
+    G4Box* fAluminumBetween_box;
+    G4LogicalVolume* fAluminumBetween_log;
 
     G4MaterialPropertiesTable* fLXe_mt;
     G4MaterialPropertiesTable* Ej200_mt;

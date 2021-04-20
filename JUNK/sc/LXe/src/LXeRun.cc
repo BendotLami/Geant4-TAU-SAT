@@ -32,6 +32,9 @@
 
 #include "LXeRun.hh"
 #include "G4SystemOfUnits.hh"
+#include <iostream>
+#include <fstream>
+#include "FilePrinter.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -43,6 +46,7 @@ LXeRun::LXeRun() : G4Run()
   fAbsorptionCount         = fAbsorptionCount2         = 0;
   fBoundaryAbsorptionCount = fBoundaryAbsorptionCount2 = 0;
   fPMTsAboveThreshold      = fPMTsAboveThreshold2      = 0;
+  PMT.resize(NUM_OF_PMTS);
 
   fTotE = fTotE2 = 0.0;
 }
@@ -72,6 +76,10 @@ void LXeRun::Merge(const G4Run* run)
   fBoundaryAbsorptionCount2 += localRun->fBoundaryAbsorptionCount2;
   fTotE                     += localRun->fTotE;
   fTotE2                    += localRun->fTotE2;
+  for (size_t i = 0; i < NUM_OF_PMTS; i++)
+  {
+         PMT[i] += localRun->PMT[i];
+  }
 
   G4Run::Merge(run);
 }
@@ -80,6 +88,7 @@ void LXeRun::Merge(const G4Run* run)
 
 void LXeRun::EndOfRun()
 {
+  std::ofstream& outFile = FilePrinter::GetFileStream();
   G4cout << "\n ======================== run summary ======================\n";
 
   G4int prec = G4cout.precision();
@@ -96,6 +105,9 @@ void LXeRun::EndOfRun()
   G4cout << "Number of hits per event:\t " << hits << " +- " << rms_hits 
          << G4endl;
 
+  outFile << "Number of hits per event:\t " << hits << " +- " << rms_hits
+         << std::endl;
+
   G4double hitsAbove = G4double(fPMTsAboveThreshold)/n_evt;
   G4double hitsAbove2 = G4double(fPMTsAboveThreshold2)/n_evt;
   G4double rms_hitsAbove = hitsAbove2 - hitsAbove*hitsAbove;
@@ -105,6 +117,9 @@ void LXeRun::EndOfRun()
   G4cout << "Number of hits per event above threshold:\t " << hitsAbove 
          << " +- " << rms_hitsAbove << G4endl;
 
+  outFile << "Number of hits per event above threshold:\t " << hitsAbove
+         << " +- " << rms_hitsAbove << std::endl;
+
   G4double scint = G4double(fPhotonCount_Scint)/n_evt;
   G4double scint2 = G4double(fPhotonCount_Scint2)/n_evt;
   G4double rms_scint = scint2 - scint*scint;
@@ -113,6 +128,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of scintillation photons per event :\t " << scint << " +- "
          << rms_scint << G4endl;
+  outFile << "Number of scintillation photons per event :\t " << scint << " +- "
+         << rms_scint << std::endl;
 
   G4double ceren = G4double(fPhotonCount_Ceren)/n_evt;
   G4double ceren2 = G4double(fPhotonCount_Ceren2)/n_evt;
@@ -131,6 +148,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of absorbed photons per event :\t " << absorb << " +- " 
          << rms_absorb << G4endl;
+  outFile << "Number of absorbed photons per event :\t " << absorb << " +- "
+         << rms_absorb << std::endl;
 
   G4double bdry = G4double(fBoundaryAbsorptionCount)/n_evt;
   G4double bdry2 = G4double(fBoundaryAbsorptionCount2)/n_evt;
@@ -140,6 +159,8 @@ void LXeRun::EndOfRun()
 
   G4cout << "Number of photons absorbed at boundary per event:\t " << bdry 
          << " +- " << rms_bdry << G4endl;
+  outFile << "Number of photons absorbed at boundary per event:\t " << bdry
+         << " +- " << rms_bdry << std::endl;
   //G4cout << "Number of unaccounted for photons: " << G4endl;
 
   G4double en = fTotE/n_evt;
@@ -150,6 +171,21 @@ void LXeRun::EndOfRun()
 
   G4cout << "Total energy deposition in scintillator per event:\t " << en/keV 
          << " +- " << rms_en/keV << " keV." << G4endl;
+  outFile << "Total energy deposition in scintillator per event:\t " << en/keV
+         << " +- " << rms_en/keV << " keV." << std::endl;
+
+  {
+         std::vector<G4String> scint_loc;
+         scint_loc.resize(4);
+         scint_loc[0] = "Top-Left";
+         scint_loc[1] = "Bottom-Right";
+         scint_loc[2] = "Top-Right";
+         scint_loc[3] = "Bottom-Left";
+         for (size_t i = 0; i < NUM_OF_PMTS; i++)
+         {
+                outFile << "Scintillator " << (i / 4) + 1 << ", PMT " << i << " (" << scint_loc[i % 4] << "): " << PMT[i] << std::endl;
+         }
+  }
 
   G4cout << G4endl;
   G4cout.precision(prec);

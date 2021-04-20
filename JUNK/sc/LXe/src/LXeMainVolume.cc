@@ -55,12 +55,12 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
                  "housing",pMotherLogical,pMany,pCopyNo),fConstructor(c)
 {
   CopyValues();
-  G4double fD_sideAluminum = 3.*mm;
+  G4double fD_sideAluminum = 1.*mm;
   // G4double fD_frontAluminum = 1.*mm;
-  G4double housing_x=fScint_x+2.*fD_sideAluminum;
-  G4double housing_y=fScint_y+2.*fD_sideAluminum;
-  // G4double housing_z=fScint_z+2.*fD_frontAluminum;
-  G4double housing_z = 12.*mm;
+  G4double housing_x = fScint_x + 2. * fD_sideAluminum;
+  G4double housing_y = fScint_y + 2. * fD_sideAluminum;
+  G4double housing_z = fScint_z + 2. * fD_mtl;
+  // G4double housing_z = fScint_z+(((0.8 + 2.625)*2)*mm);
  
   //*************************** housing and scintillator
   G4double dist_from_corner = fScint_z / 2;
@@ -95,38 +95,46 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
   }
 
   {
-    fHousing_box = new G4Box("housing_box_before_deletion", housing_x / 2., housing_y / 2., housing_z / 2.);
-    G4VSolid *fRemovalAluminum = new G4Box("housing_box_removal", fScint_x / 2., fScint_y / 2., 0.9*mm);
-    fHousing_box = new G4SubtractionSolid("housing_box_1", fHousing_box, fRemovalAluminum, nullptr, G4ThreeVector(0, 0, (3.2+0.901)*mm));
-    fHousing_box = new G4SubtractionSolid("housing_box", fHousing_box, fRemovalAluminum, nullptr, G4ThreeVector(0, 0, -(3.2+0.901)*mm));
+    fHousing_box = new G4Box("housing_box", housing_x / 2., housing_y / 2., housing_z / 2.);
+    // G4VSolid *fRemovalAluminum = new G4Box("housing_box_removal", housing_x, housing_y, 2.625 / 2.);
+    // fHousing_box = new G4SubtractionSolid("housing_box_2", fHousing_box, fRemovalAluminum, nullptr, G4ThreeVector(0., 0., ((fScint_z + 2.625) / 2.) * mm));
+    // fHousing_box = new G4SubtractionSolid("housing_box_3", fHousing_box, fRemovalAluminum, nullptr, G4ThreeVector(0, 0, -((fScint_z + 2.625) / 2.) * mm));
+
+    // G4VSolid *fRemoveScint = new G4Box("housing_box_removal", fScint_x/2., housing_y, (fScint_z + 0.1*mm)/2.);
+    // fHousing_box = new G4SubtractionSolid("housing_box_4", fHousing_box, fRemoveScint, nullptr, G4ThreeVector(fScint_x, 0, 0));
+    // fHousing_box = new G4SubtractionSolid("housing_box_5", fHousing_box, fRemoveScint, nullptr, G4ThreeVector(-fScint_x, 0, 0));
+    // fRemoveScint = new G4Box("housing_box_removal", housing_x, fScint_y/2., (fScint_z + 0.1*mm)/2.);
+    // fHousing_box = new G4SubtractionSolid("housing_box_6", fHousing_box, fRemoveScint, nullptr, G4ThreeVector(0, fScint_y, 0));
+    // fHousing_box = new G4SubtractionSolid("housing_box", fHousing_box, fRemoveScint, nullptr, G4ThreeVector(0, -fScint_y, 0));
+    // fHousing_box = new G4IntersectionSolid("housing_box", fHousing_box, fKeepScint, nullptr, G4ThreeVector(0, 0, 0));
   }
-  // G4double housing_dist_from_corner = dist_from_corner - fD_mtl;
+  G4double housing_dist_from_corner = dist_from_corner - fD_mtl;
 
   // {
   //   // TODO: Clean up this s**t
   //   // merge with last one
-  //   std::vector<G4ThreeVector> cornerLocations;
-  //   G4double x_loc = fScint_x / 2.;
-  //   G4double y_loc = fScint_y / 2.;
-  //   cornerLocations.emplace_back(x_loc, y_loc, 0);
-  //   cornerLocations.emplace_back(x_loc, -y_loc, 0);
-  //   cornerLocations.emplace_back(-x_loc, y_loc, 0);
-  //   cornerLocations.emplace_back(-x_loc, -y_loc, 0);
-  //   for (size_t i = 0; i < 4; i++)
-  //   {
-  //     G4double x_scale = cornerLocations[i].getX() * cornerLocations[i].getY() > 0 ? 2. : 1.;
-  //     G4double y_scale = 3. - x_scale;
-  //     G4VSolid *fCornerRemoval = new G4Box("housing_box_removal" + std::to_string(i), housing_dist_from_corner * x_scale, housing_dist_from_corner * y_scale, housing_z);
+    std::vector<G4ThreeVector> cornerLocations;
+    G4double x_loc = fScint_x / 2.;
+    G4double y_loc = fScint_y / 2.;
+    cornerLocations.emplace_back(x_loc, y_loc, 0);
+    cornerLocations.emplace_back(x_loc, -y_loc, 0);
+    cornerLocations.emplace_back(-x_loc, y_loc, 0);
+    cornerLocations.emplace_back(-x_loc, -y_loc, 0);
+    for (size_t i = 0; i < 4; i++)
+    {
+      G4double x_scale = cornerLocations[i].getX() * cornerLocations[i].getY() > 0 ? 2. : 1.;
+      G4double y_scale = 3. - x_scale;
+      G4VSolid *fCornerRemoval = new G4Box("housing_box_removal" + std::to_string(i), housing_dist_from_corner * x_scale, housing_dist_from_corner * y_scale, (housing_z+0.1*mm)/2.);
 
-  //     G4RotationMatrix *removal = new G4RotationMatrix();
-  //     removal->rotateZ(45 * deg);
-  //     std::string name = i == 3 ? "housing_box" : "housing_box" + std::to_string(i);
-  //     fHousing_box = new G4SubtractionSolid("housing_box" + std::to_string(i), // name
-  //                                           fHousing_box,                      // solid A
-  //                                           fCornerRemoval,                    // solid B
-  //                                           removal,                           // rotation
-  //                                           cornerLocations[i]);               // translation
-  //   }
+      G4RotationMatrix *removal = new G4RotationMatrix();
+      removal->rotateZ(45 * deg);
+      std::string name = i == 3 ? "housing_box" : "housing_box" + std::to_string(i);
+      fHousing_box = new G4SubtractionSolid("housing_box" + std::to_string(i), // name
+                                            fHousing_box,                      // solid A
+                                            fCornerRemoval,                    // solid B
+                                            removal,                           // rotation
+                                            cornerLocations[i]);               // translation
+    }
   // }
 
   fScint_log = new G4LogicalVolume(fScint_box,G4Material::GetMaterial("Ej200"),
@@ -230,7 +238,7 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
                     fHousing_log, false, k++);
   fPmtPositions.push_back(G4ThreeVector(-fScint_x / 2, fScint_y / 2., 0) + offset);
 
-  fNx = 12;
+  fNx = 10;
   fNy = 1;
   fNz = 0; // trick SD to recognize 4 pmts
 
@@ -334,7 +342,7 @@ void LXeMainVolume::SurfaceProperties(){
   const G4int num = sizeof(ephoton)/sizeof(G4double);
 
   //**Scintillator housing properties
-  G4double reflectivity[] = {0., 0.};
+  G4double reflectivity[] = {0.5, 0.5};
   assert(sizeof(reflectivity) == sizeof(ephoton));
   G4double efficiency[] = {0.0, 0.0};
   assert(sizeof(efficiency) == sizeof(ephoton));
@@ -344,7 +352,8 @@ void LXeMainVolume::SurfaceProperties(){
   G4OpticalSurface* OpScintHousingSurface =
     new G4OpticalSurface("HousingSurface",unified,polished,dielectric_metal);
   OpScintHousingSurface->SetMaterialPropertiesTable(scintHsngPT);
-  OpScintHousingSurface->SetPolish(0.);
+  OpScintHousingSurface->SetPolish(1.);
+  // OpScintHousingSurface->SetSigmaAlpha(1.);
  
   //**Sphere surface properties
   G4double sphereReflectivity[] = {1.0, 1.0};
@@ -365,10 +374,13 @@ void LXeMainVolume::SurfaceProperties(){
   assert(sizeof(photocath_ReR) == sizeof(ephoton));
   G4double photocath_ImR[]={1.69,1.69};
   assert(sizeof(photocath_ImR) == sizeof(ephoton));
+  G4double photocath_Reflectivity[]={0.,0.};
+  assert(sizeof(photocath_Reflectivity) == sizeof(ephoton));
   G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
   photocath_mt->AddProperty("EFFICIENCY",ephoton,photocath_EFF,num);
   photocath_mt->AddProperty("REALRINDEX",ephoton,photocath_ReR,num);
   photocath_mt->AddProperty("IMAGINARYRINDEX",ephoton,photocath_ImR,num);
+  photocath_mt->AddProperty("REFLECTIVITY", ephoton, photocath_Reflectivity, num);
   G4OpticalSurface* photocath_opsurf=
     new G4OpticalSurface("photocath_opsurf",glisur,polished,
                          dielectric_metal);
@@ -384,7 +396,21 @@ void LXeMainVolume::SurfaceProperties(){
   G4OpticalSurface *antiRef_Surface =
       new G4OpticalSurface("antiRefSurface", glisur, polished, dielectric_metal);
   antiRef_Surface->SetMaterialPropertiesTable(antiRef_PT);
-  // antiRef_Surface->SetPolish(1.);
+  antiRef_Surface->SetPolish(1.);
+
+  // between panels
+  // G4double ar_reflectivity_2[] = {1.0, 1.0};
+  // assert(sizeof(ar_reflectivity_2) == sizeof(ephoton));
+  // G4double ar_efficiency_2[] = {0.98, 0.98};
+  // assert(sizeof(ar_efficiency_2) == sizeof(ephoton));
+  // G4MaterialPropertiesTable* antiRef_PT_2 = new G4MaterialPropertiesTable();
+  // antiRef_PT_2->AddProperty("REFLECTIVITY", ephoton, ar_reflectivity_2, num);
+  // antiRef_PT_2->AddProperty("EFFICIENCY", ephoton, ar_efficiency_2, num);
+  // G4OpticalSurface *antiRef_Surface_2 =
+  //     new G4OpticalSurface("antiRefSurface_2", glisur, polished, dielectric_metal);
+  // antiRef_Surface_2->SetMaterialPropertiesTable(antiRef_PT_2);
+  // antiRef_Surface_2->SetPolish(0.);
+  // // antiRef_Surface_2->SetSigmaAlpha(1.);
 
   //**Create logical skin surfaces
   new G4LogicalSkinSurface("photocath_surf",fHousing_log,
@@ -392,4 +418,5 @@ void LXeMainVolume::SurfaceProperties(){
   new G4LogicalSkinSurface("sphere_surface",fSphere_log,OpSphereSurface);
   new G4LogicalSkinSurface("photocath_surf",fPhotocath_log,photocath_opsurf);
   new G4LogicalSkinSurface("antiref_surf",fAntiReflectivity_log,antiRef_Surface);
+  // new G4LogicalSkinSurface("antiref_surf_2",fHousing_log,antiRef_Surface_2);
 }

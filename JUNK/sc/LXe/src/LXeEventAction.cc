@@ -224,6 +224,20 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
                 fAbsorptionCount - fHitCount - fBoundaryAbsorptionCount)
            << G4endl;
   }
+  std::vector<G4int> pmts_vec;
+  pmts_vec.resize(NUM_OF_PMTS);
+  if (pmtHC)
+  {
+    G4int pmts = pmtHC->entries();
+    //Gather info from all PMTs
+    G4cout << (*pmtHC).GetVector()->size() << G4endl;
+    for (G4int i = 0; i < pmts; i++)
+    {
+      G4cout << (*pmtHC)[i]->GetPMTPos() << G4endl;
+      G4cout << "PMT-DATA: " << (*pmtHC)[i]->GetPMTPhysVol()->GetInstanceID() << " | " << (*pmtHC)[i]->GetPMTPhysVol()->GetTranslation() << " | " << (*pmtHC)[i]->GetPhotonCount() << G4endl;
+      pmts_vec[i] = (*pmtHC)[i]->GetPhotonCount();
+    }
+  }
 
   // update the run statistics
   LXeRun* run = static_cast<LXeRun*>(
@@ -236,6 +250,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
   run->IncAbsorption(fAbsorptionCount);
   run->IncBoundaryAbsorption(fBoundaryAbsorptionCount);
   run->IncHitsAboveThreshold(fPMTsAboveThreshold);
+  run->IncPMTS(pmts_vec);
 
   //If we have set the flag to save 'special' events, save here
   if(fPhotonCount_Scint + fPhotonCount_Ceren <= fDetector->GetSaveThreshold())
