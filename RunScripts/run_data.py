@@ -10,7 +10,7 @@ INPUT_FILE_NAME = 'input.txt'
 OUTPUT_FILE_NAME = 'test.txt'
 GEANT_EXE_LOCATION = '/storage/t3_data/benl/project/LXe_silicon_25_2/build/LXe'
 
-NUMBER_OF_SLABS = 4
+NUMBER_OF_SLABS = 5
 
 
 def make_dir(path):
@@ -53,9 +53,10 @@ def get_scientific_number(line):
     final_list = [float(x) for x in re.findall(match_number, line)]
     return final_list[0]
 
+
 def init_number_of_slabs():
     global NUMBER_OF_SLABS
-    NUMBER_OF_SLABS = 4
+    NUMBER_OF_SLABS = 5
 
 
 def get_run_data(run_dir):
@@ -116,7 +117,13 @@ if __name__ == "__main__":
 
             output_lines = []
             row = next(reader)
-            row.extend(['Silicon_2 enter location', 'Silicon_2 exit location', 'Silicon_1 enter location', 'Silicon_1 exit location', 'Scint_1 enter location', 'Scint_1 exit location', 'Scint_2 enter location', 'Scint_2 exit location', 'Number of photons created', 'Number of electron-hole pairs created in Silicon_1', 'Number of electron-hole pairs created in Silicon_2', 'Photons absorbed in Scint_1 Top-Left', 'Photons absorbed in Scint_1 Bottom-Right', 'Photons absorbed in Scint_1 Top-Right', 'Photons absorbed in Scint_1 Bottom-Left', 'Photons absorbed in Scint_2 Top-Left', 'Photons absorbed in Scint_2 Bottom-Right', 'Photons absorbed in Scint_2 Top-Right', 'Photons absorbed in Scint_2 Bottom-Left'])
+            row.extend(['Scint_1 enter location', 'Scint_1 exit location', 'Scint_2 enter location', 'Scint_2 exit location', 'Scint_3 enter location', 'Scint_3 exit location','Scint_4 enter location', 'Scint_4 exit location','Scint_5 enter location', 'Scint_5 exit location', 'Number of photons created'])
+            row.extend(['Photons absorbed in Scint_1 Top-Left', 'Photons absorbed in Scint_1 Bottom-Right', 'Photons absorbed in Scint_1 Top-Right', 'Photons absorbed in Scint_1 Bottom-Left'])
+            row.extend(['Photons absorbed in Scint_2 Top-Left', 'Photons absorbed in Scint_2 Bottom-Right', 'Photons absorbed in Scint_2 Top-Right', 'Photons absorbed in Scint_2 Bottom-Left'])
+            row.extend(['Photons absorbed in Scint_3 Top-Left', 'Photons absorbed in Scint_3 Bottom-Right', 'Photons absorbed in Scint_3 Top-Right', 'Photons absorbed in Scint_3 Bottom-Left'])
+            row.extend(['Photons absorbed in Scint_4 Top-Left', 'Photons absorbed in Scint_4 Bottom-Right', 'Photons absorbed in Scint_4 Top-Right', 'Photons absorbed in Scint_4 Bottom-Left'])
+            row.extend(['Photons absorbed in Scint_5 Top-Left', 'Photons absorbed in Scint_5 Bottom-Right', 'Photons absorbed in Scint_5 Top-Right', 'Photons absorbed in Scint_5 Bottom-Left'])
+
             output_lines.append(row)
             for run_number, row in enumerate(reader):
                 actual_run_number = run_number + 1
