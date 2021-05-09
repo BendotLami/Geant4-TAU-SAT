@@ -125,7 +125,7 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
   fScint_log = new G4LogicalVolume(fScint_box,G4Material::GetMaterial("Ej200"),
                                    "scint_log",0,0,0);
   fHousing_log = new G4LogicalVolume(fHousing_box,
-                                     G4Material::GetMaterial("Al"),
+                                     G4Material::GetMaterial("Air"),
                                      "housing_log",0,0,0);
  
   new G4PVPlacement(0,G4ThreeVector(),fScint_log,"scintillator",
