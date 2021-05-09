@@ -34,7 +34,7 @@
 #include "G4SystemOfUnits.hh"
 #include <iostream>
 #include <fstream>
-#include "FilePrinter.hh"
+#include <memory>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 LXeRun::LXeRun() : G4Run()
@@ -94,7 +94,8 @@ void LXeRun::Merge(const G4Run* run)
 
 void LXeRun::EndOfRun()
 {
-  std::ofstream& outFile = FilePrinter::GetFileStream();
+  static uint32_t a = 0;
+  std::ofstream outFile(std::string("./output/") + std::to_string(a++) + std::string(".txt"));
   G4cout << "\n ======================== run summary ======================\n";
 
   G4int prec = G4cout.precision();

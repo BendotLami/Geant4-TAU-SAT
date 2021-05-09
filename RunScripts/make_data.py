@@ -4,6 +4,7 @@ import csv
 
 MOTHER_FOLDER = "/runs/"
 INPUT_FILE_NAME = "input.txt"
+OUTPUT_FILE_NAME = "/output" # should match what geant4 expects
 
 def make_dir(path):
     try:
@@ -29,14 +30,17 @@ def create_input_file(filepath, particle: str, ion: str, energy: str,
         f.write("/gun/energy {} {}\n".format(energy, energy_unit))
         f.write("/gun/position {} {}\n".format(position, position_unit))  # 0 0 0 m (x,y,z, unit)
         f.write("/gun/direction {}\n".format(direction)) # 0 0 0
-        f.write("/run/beamOn 1\n")
+        for _ in range(100): # 100 different runs
+            f.write("/run/beamOn 1\n")
+        make_dir(filepath + OUTPUT_FILE_NAME)
 
 def create_runs():
-    energies = [100,150,200,250,300,400,500,600,700,800,900,1000]  # in MeV
-    positions = [(0, 0, -20)]
+    energies = [50, 100, 200, 500, 1000, 5000, 10000,
+                20000, 30000, 50000, 70000, 80000, 100000]  # in MeV
+    positions = [(0, 0, -2)]
     directions = [(0, 0, 1)]
-    particles = ["proton", "e-", "ion"]
-    ions = [(3, 6, 3), (4, 8, 4), (10, 20, 10)]
+    particles = ["proton", "e-", "e+", "gamma", "neutron", "mu+", "mu-"] # for now ignoring ion
+    ions = [(2, 4, 2), (6, 12, 6), (8, 16, 8), (26, 52, 26)]
 
     with open("mapping.csv", 'w', newline='') as map_file:
         run_writer = csv.writer(map_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -61,11 +65,11 @@ def create_runs():
 
 if __name__=="__main__":
     save_path = sys.argv[1]
-    # if os.path.exists(save_path):
-    #     os.chdir(save_path)
-    #     MOTHER_FOLDER = save_path + MOTHER_FOLDER
-    # else:
-    #     exit(1)
+    if os.path.exists(save_path):
+        os.chdir(save_path)
+        MOTHER_FOLDER = save_path + MOTHER_FOLDER
+    else:
+        exit(1)
 
-    # make_dir(MOTHER_FOLDER)
-    # create_runs()
+    make_dir(MOTHER_FOLDER)
+    create_runs()

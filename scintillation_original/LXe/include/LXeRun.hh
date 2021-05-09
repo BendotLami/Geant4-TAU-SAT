@@ -34,6 +34,7 @@
 #define LXeRun_h 1
 
 #include "G4Run.hh"
+#include "FilePrinter.hh"
 #include "globals.hh"
 
 #define NUM_OF_PMTS (8)
@@ -103,6 +104,7 @@ class LXeRun : public G4Run
     G4int fSilicon1eCounter;
     G4int fSilicon2eCounter;
     std::vector<G4int> PMT;
+    FilePrinter saveFile;
 
     G4double fTotE, fTotE2;
 };

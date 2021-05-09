@@ -39,14 +39,14 @@ private:
     bool iOpenedFile = false;
 
 protected:
-    static std::ofstream file;
+    std::ofstream file;
 
 public:
     FilePrinter() = default;
     FilePrinter(std::string name);
     void CloseFile();
     void OpenFile(std::string name);
-    static std::ofstream& GetFileStream() {return file;};
+    std::ofstream& GetFileStream() {return file;};
     ~FilePrinter();
 };
 

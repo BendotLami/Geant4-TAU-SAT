@@ -58,7 +58,7 @@
 
 int main(int argc, char** argv)
 {
-  auto f = FilePrinter("test.txt"); // destructor will take care of the rest
+  // auto f = FilePrinter("test.txt"); // destructor will take care of the rest
 
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = nullptr;

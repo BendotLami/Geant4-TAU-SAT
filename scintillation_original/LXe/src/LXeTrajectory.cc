@@ -136,7 +136,7 @@ void LXeTrajectory::DrawTrajectory() const
       colour = G4Colour(0., 1., 0.);
     }
     else //All other particles are blue
-      colour = G4Colour(0.,0.,1.);
+      colour = G4Colour(1.,1.,0.);
  
     G4VisAttributes trajectoryLineAttribs(colour);
     trajectoryLine.SetVisAttributes(&trajectoryLineAttribs);

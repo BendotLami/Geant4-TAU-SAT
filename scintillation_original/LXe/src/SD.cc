@@ -84,20 +84,20 @@ G4bool B2TrackerSD::ProcessHits(G4Step* aStep,
 
   if (aStep->GetTrack()->GetParentID() == 0)
   {
-    std::ofstream& outFile = FilePrinter::GetFileStream();
+    // std::ofstream& outFile = FilePrinter::GetFileStream();
     if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary)
     {
       G4cout << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetSolid()->GetName() << G4endl;
       G4cout << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
       G4cout << "Enter Location: " << (aStep->GetTrack()->GetPosition()) << G4endl;
-      outFile << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetSolid()->GetName() << G4endl;
-      outFile << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
-      outFile << "Enter Location: " << (aStep->GetTrack()->GetPosition()) << G4endl;
+      // outFile << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetSolid()->GetName() << G4endl;
+      // outFile << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
+      // outFile << "Enter Location: " << (aStep->GetTrack()->GetPosition()) << G4endl;
     }
     if (aStep->IsLastStepInVolume())
     {
       G4cout << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
-      outFile << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
+      // outFile << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
     }
   }
 
