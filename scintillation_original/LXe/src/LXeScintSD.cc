@@ -75,12 +75,12 @@ G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
   if (aStep->GetTrack()->GetParentID() == 0)
   {
     G4StepPoint *preStep = aStep->GetPreStepPoint();
-    // std::ofstream& outFile = FilePrinter::GetFileStream();
+    std::stringstream& ss = FilePrinter::GetStreamForWrite();
     if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary)
     {
-      // outFile << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
-      // outFile << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
-      // outFile << "Enter Location: " << (preStep->GetPosition()) << G4endl;
+      ss << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
+      ss << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
+      ss << "Enter Location: " << (preStep->GetPosition()) << G4endl;
       G4cout << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
       G4cout << "Particle Name: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
       G4cout << "Enter Location: " << (preStep->GetPosition()) << G4endl;
@@ -88,7 +88,9 @@ G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
 
     if (aStep->IsLastStepInVolume())
     {
-      // outFile << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
+      ss << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
+      G4cout << "Particle Volume: " << aStep->GetTrack()->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
+      ss << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
       G4cout << "Exit Location: " << aStep->GetTrack()->GetPosition() << G4endl;
     }
   }

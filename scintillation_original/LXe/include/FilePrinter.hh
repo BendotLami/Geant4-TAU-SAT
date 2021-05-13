@@ -30,23 +30,26 @@
 #ifndef FILE_PRINTER_h
 #define FILE_PRINTER_h 1
 
-#include <fstream>
+// #include <fstream>
 #include <iostream>
+#include <sstream>
 
 class FilePrinter
 {
-private:
-    bool iOpenedFile = false;
-
 protected:
-    std::ofstream file;
+    static std::stringstream ss;
 
 public:
     FilePrinter() = default;
-    FilePrinter(std::string name);
-    void CloseFile();
-    void OpenFile(std::string name);
-    std::ofstream& GetFileStream() {return file;};
+    static std::stringstream &GetStreamForWrite() {return ss;}
+    static void ClearStream() {ss.str("");}
+    static std::string GetStringForFile() { return ss.str(); }
+    static std::string GetStringAndReset()
+    {
+        std::string temp = GetStringForFile();
+        ClearStream();
+        return std::move(temp);
+    };
     ~FilePrinter();
 };
 

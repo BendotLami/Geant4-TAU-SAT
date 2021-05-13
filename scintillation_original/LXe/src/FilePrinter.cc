@@ -1,27 +1,8 @@
 #include "FilePrinter.hh"
+std::stringstream FilePrinter::ss;
 
-void FilePrinter::CloseFile()
-{
-    if(file.is_open())
-        file.close();
-    iOpenedFile = false;
-}
-void FilePrinter::OpenFile(std::string name)
-{
-    CloseFile();
-    file.open(name, std::ios_base::app);
-    file << "### NEW RUN RESULTS: ###" << std::endl;
-    iOpenedFile = true;
-}
-
-FilePrinter::FilePrinter(std::string name)
-{
-    OpenFile(name);
-    iOpenedFile = true;
-}
+// static std::string FilePrinter::GetStringAndReset()
+// {}
 
 FilePrinter::~FilePrinter()
-{
-    if(iOpenedFile)
-        CloseFile();
-}
+{}

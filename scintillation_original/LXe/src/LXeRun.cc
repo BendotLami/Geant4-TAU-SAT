@@ -35,6 +35,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include "FilePrinter.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 LXeRun::LXeRun() : G4Run()
@@ -96,6 +97,7 @@ void LXeRun::EndOfRun()
 {
   static uint32_t a = 0;
   std::ofstream outFile(std::string("./output/") + std::to_string(a++) + std::string(".txt"));
+  outFile << FilePrinter::GetStringAndReset();
   G4cout << "\n ======================== run summary ======================\n";
 
   G4int prec = G4cout.precision();
