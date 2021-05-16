@@ -6,7 +6,9 @@ import csv
 import pathlib
 import time
 import argparse
+import queue
 from typing import Pattern
+from thread_worker import Workers
 
 MOTHER_FOLDER = '/runs/'
 INPUT_FILE_NAME = 'input.txt'
@@ -17,7 +19,6 @@ RUN_BEAM_ON = 100
 COUNT_TIME = True
 
 NUMBER_OF_SLABS = 4
-
 
 def make_dir(path):
     try:
@@ -105,12 +106,17 @@ def get_run_number(run_dir):
     # print(path.name)
     return int(path.name)
 
+def worker_func(run_dir):
+    # os.chdir(run_dir)
+    with open(f"{run_dir}/run_stdout.txt", 'w') as out_fd:
+        subprocess.run(f"cd {run_dir} && {GEANT_EXE_LOCATION} {INPUT_FILE_NAME}", stdout=out_fd, shell=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-run", action='store_true')
     parser.add_argument("-parse", action='store_true')
     parser.add_argument("-dir", default='.')
+    parser.add_argument("-j", default=1, type=int)
     args = parser.parse_args()
 
     save_path = args.dir
@@ -126,21 +132,26 @@ if __name__ == "__main__":
         print("Choose one of -run/-parse arguments!")
         exit(1)
 
-
+    if args.run:
+        queue = queue.Queue()
     # start_time = time.time() # timestamp before run
     simulation_data = dict()
     for run_dir, _, filename in os.walk(os.getcwd()):
         if INPUT_FILE_NAME in filename:
             os.chdir(run_dir)
             if args.run:
-                with open("run_stdout.txt", 'w') as out_fd:
-                    subprocess.run([GEANT_EXE_LOCATION, INPUT_FILE_NAME], stdout=out_fd)
+                queue.put(run_dir)
+                # with open("run_stdout.txt", 'w') as out_fd:
+                #     subprocess.run([GEANT_EXE_LOCATION, INPUT_FILE_NAME], stdout=out_fd)
             elif args.parse:
                 run_number = get_run_number(run_dir)
                 simulation_data[run_number] = get_run_data(run_dir)
             # print('Debug: extracted the following data: \n {}'.format(simulation_data[run_number]))
 
     if args.run:
+        workers = Workers(queue, worker_func, args.j)
+        workers.start_workers()
+        workers.wait_for_all_workers()
         exit(0)
     # end_time = time.time() # timestamp after run
 
