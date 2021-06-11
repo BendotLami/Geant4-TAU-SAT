@@ -339,13 +339,8 @@ void LXeDetectorConstruction::ConstructSDandField() {
 
     pmt_SD->InitPMTs((4)*2); //let pmtSD know # of pmts
     std::vector<G4ThreeVector> total = fMainVolume->GetPmtPositions();
-    // total.reserve(fMainVolume->GetPmtPositions().size() + fMainVolume2->GetPmtPositions().size());
-    // total.insert(total.end(), fMainVolume->GetPmtPositions().begin(), fMainVolume->GetPmtPositions().end());
     auto a = fMainVolume2->GetPmtPositions();
     total.insert(total.end(), a.begin(), a.end());
-    // pmt_SD->SetPmtPositions(fMainVolume->GetPmtPositions());
-    // pmt_SD->SetPmtPositions(fMainVolume2->GetPmtPositions());
-    G4cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " << total.size() << G4endl;
     pmt_SD->SetPmtPositions(total);
   }
   G4SDManager::GetSDMpointer()->AddNewDetector(fPmt_SD.Get());

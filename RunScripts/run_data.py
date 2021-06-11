@@ -85,7 +85,7 @@ def get_run_data(run_dir):
                 continue
             # Check if there are untouchable slabs
             add_missing_slabs(res)
-            if "Number of hits per event:" in content[i]:
+            if "Number of scintillation photons per event :" in content[i]:
                 # print("Number of hits per event:")
                 res.append(get_scientific_number(content[i]))
             elif "Silicon slab no." in content[i]:
