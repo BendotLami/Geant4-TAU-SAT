@@ -70,7 +70,6 @@ void B2TrackerSD::Initialize(G4HCofThisEvent* hce)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-// static G4int gunParticleId = -1; // will contain the id of the first particle
 
 G4bool B2TrackerSD::ProcessHits(G4Step* aStep, 
                                      G4TouchableHistory*)
@@ -84,6 +83,7 @@ G4bool B2TrackerSD::ProcessHits(G4Step* aStep,
 
   if (aStep->GetTrack()->GetParentID() == 0)
   {
+    // print/save relevant data from the gun-particle in the silicon
     std::stringstream& ss = FilePrinter::GetStreamForWrite();
     if (aStep->IsFirstStepInVolume() && preStep->GetStepStatus() == fGeomBoundary)
     {

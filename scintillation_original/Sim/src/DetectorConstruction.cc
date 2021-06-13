@@ -33,8 +33,6 @@
 #include "G4ProductionCuts.hh"
 #include "G4SDManager.hh"
 #include "G4PhysicalConstants.hh"
-// #include "G4MaterialTable.hh"
-// #include "G4Material.hh"
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -68,17 +66,6 @@ void DetectorConstruction::DefineMaterials()
   // Default materials in setup.
   fSiMaterial = Si;
   fVoidMaterial = man->FindOrBuildMaterial("G4_Galactic"); // vacuum approxiamtion
-  // fVoidMaterial = Si;
-
-  // vacuum, taken from Sim example:
-  // G4double a;  // atomic mass
-  // G4double z;  // atomic number
-  // G4double density;
-  // fVoidMaterial = new G4Material("Vacuum", z = 1., a = 1.01 * g / mole,
-  //                                density = universe_mean_density, kStateGas, 0.1 * kelvin,
-  //                                1.e-19 * pascal);
-
-  // vacuum from internet:
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -167,14 +154,4 @@ void DetectorConstruction::ConstructSDandField()
   // Setting aTrackerSD to all logical volumes with the same name 
   // of "Chamber_LV".
   SetSensitiveDetector("Target", aTrackerSD, true);
-
-  // Create global magnetic field messenger.
-  // Uniform magnetic field is then created automatically if
-  // the field value is not zero.
-  // G4ThreeVector fieldValue = G4ThreeVector();
-  // fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
-  // fMagFieldMessenger->SetVerboseLevel(2);
-  
-  // // Register the field messenger for deleting
-  // G4AutoDelete::Register(fMagFieldMessenger);
 }

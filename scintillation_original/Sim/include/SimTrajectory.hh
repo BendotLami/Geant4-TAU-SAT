@@ -56,13 +56,11 @@ class SimTrajectory : public G4Trajectory
     inline void  operator delete(void*);
 
     void SetDrawTrajectory(G4bool b){fDrawit=b;}
-    // void WLS(){fWls=true;}
     void SetForceDrawTrajectory(G4bool b){fForceDraw=b;}
     void SetForceNoDrawTrajectory(G4bool b){fForceNoDraw=b;}
 
   private:
 
-    // G4bool fWls;
     G4bool fDrawit;
     G4bool fForceNoDraw;
     G4bool fForceDraw;

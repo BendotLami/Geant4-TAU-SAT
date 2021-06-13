@@ -74,12 +74,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
  if (step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()=="hIoni")				flagProcess =16;
  if (step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()=="eIoni")				flagProcess =17;
 
-// static bool a = false;
-// if(!a){
-// std::cout << step->GetPreStepPoint()->GetKineticEnergy()/eV << std::endl;
-// a = true;
-// }
-
  if (step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()!="Transportation")
  {  
    x=step->GetPreStepPoint()->GetPosition().x()/nanometer;

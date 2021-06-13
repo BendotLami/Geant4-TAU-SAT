@@ -86,28 +86,12 @@ G4bool B2TrackerHit::operator==(const B2TrackerHit& right) const
 
 void B2TrackerHit::Draw()
 {
-//   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
-//   if(pVVisManager)
-//   {
-//     G4Circle circle(fPos);
-//     circle.SetScreenSize(4.);
-//     circle.SetFillStyle(G4Circle::filled);
-//     G4Colour colour(1.,0.,0.);
-//     G4VisAttributes attribs(colour);
-//     circle.SetVisAttributes(attribs);
-//     pVVisManager->Draw(circle);
-//   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void B2TrackerHit::Print()
 {
-//   G4cout
-//      << "  trackID: " << fTrackID << " chamberNb: " << fChamberNb
-//      << " Position: "
-//      << std::setw(7) << G4BestUnit( fPos,"Length")
-//      << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

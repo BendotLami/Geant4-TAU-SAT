@@ -127,17 +127,7 @@ G4bool SimPMTSD::ProcessHits_constStep(const G4Step* aStep,
 
   hit->IncPhotonCount(); //increment hit for the selected pmt
  
-  if(!SimDetectorConstruction::GetSphereOn()){
-    hit->SetDrawit(true);
-    //If the sphere is disabled then this hit is automaticaly drawn
-  }
-  else{//sphere enabled
-    SimUserTrackInformation* trackInfo=
-      (SimUserTrackInformation*)aStep->GetTrack()->GetUserInformation();
-    if(trackInfo->GetTrackStatus()&hitSphere)
-      //only draw this hit if the photon has hit the sphere first
-      hit->SetDrawit(true);
-  }
+  hit->SetDrawit(true);
 
   return true;
 }

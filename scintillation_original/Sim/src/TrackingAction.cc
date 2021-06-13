@@ -52,7 +52,6 @@ TrackingAction::~TrackingAction()
 void TrackingAction::PreUserTrackingAction(const G4Track* track)
 {
     const G4ParticleDefinition* particleDefinition = track->GetParticleDefinition();
-    // track->GetDynamicParticle().GetDe
 
     if(particleDefinition == G4Electron::Definition() || particleDefinition == G4Gamma::Definition())
     {
@@ -77,11 +76,6 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
                 inside_target = true;
                 break;
             }
-            /*
-            else if (test_status == kSurface)
-            {
-            }
-            */
         }
 
         if(inside_target == true)

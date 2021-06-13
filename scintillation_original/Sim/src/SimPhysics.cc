@@ -58,13 +58,8 @@ auto particleIterator=GetParticleIterator();
     if (particleName == "e-") {
 
       // STANDARD msc is active in the world
-      // G4eMultipleScattering* msc = new G4eMultipleScattering();
-      // msc->AddEmModel(1, new G4UrbanMscModel());
-      // pmanager->AddProcess(msc, -1, 1, -1);
 
       // STANDARD ionisation is active in the world
-      // G4eIonisation* eion = new G4eIonisation();
-      // pmanager->AddProcess(eion, -1, 2, 2);
 
       // MicroElec elastic is not active in the world 
       G4MicroElecElastic* theMicroElecElasticProcess = new G4MicroElecElastic("e-_G4MicroElecElastic");
@@ -84,9 +79,6 @@ auto particleIterator=GetParticleIterator();
     } else if ( particleName == "proton" ) {
 
       // STANDARD msc is active in the world 
-      // G4hMultipleScattering* msc = new G4hMultipleScattering();
-      // msc->AddEmModel(1, new G4UrbanMscModel());
-      // pmanager->AddProcess(msc, -1, 1, -1);
 
       // STANDARD ionisation is active in the world 
       G4hIonisation* hion = new G4hIonisation();
@@ -106,8 +98,6 @@ auto particleIterator=GetParticleIterator();
       pmanager->AddProcess(new G4hMultipleScattering, -1, 1, -1);
 
       // STANDARD ionisation is active in the world 
-      // G4ionIonisation* hion = new G4ionIonisation();
-      // pmanager->AddProcess(hion, -1, 2, 2);
 
       // MicroElec ionisation is not active in the world 
       G4MicroElecInelastic* microelecioni = new G4MicroElecInelastic("ion_G4MicroElecInelastic");

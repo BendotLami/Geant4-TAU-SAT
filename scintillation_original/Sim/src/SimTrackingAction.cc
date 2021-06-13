@@ -57,7 +57,6 @@ void SimTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   //  fpTrackingManager->SetStoreTrajectory(true);
 
 const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition();
-    // track->GetDynamicParticle().GetDe
     if(particleDefinition == G4Electron::Definition()) //  || particleDefinition == G4Gamma::Definition())
     {
         if(fTargetRegion == 0) // target region is initialized after detector construction instantiation
@@ -95,11 +94,6 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
               break;
             }
           }
-            /*
-            else if (test_status == kSurface)
-            {
-            }
-            */
         }
 
         if(inside_target_1 == true)
@@ -123,11 +117,6 @@ const G4ParticleDefinition* particleDefinition = aTrack->GetParticleDefinition()
 
   //This user track information is only relevant to the photons
   fpTrackingManager->SetUserTrackInformation(new SimUserTrackInformation);
-
-  /*  const G4VProcess* creator = aTrack->GetCreatorProcess();
-  if(creator)
-    G4cout<<creator->GetProcessName()<<G4endl;
-  */
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -138,25 +127,10 @@ void SimTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
   SimUserTrackInformation*
     trackInformation=(SimUserTrackInformation*)aTrack->GetUserInformation();
 
-  //Lets choose to draw only the photons that hit the sphere and a pmt
+  //Lets choose to draw only the photons that hit a pmt
   if(aTrack->GetDefinition()==G4OpticalPhoton::OpticalPhotonDefinition()){
-
-    // const G4VProcess* creator=aTrack->GetCreatorProcess();
-    // if(creator && creator->GetProcessName()=="OpWLS"){
-    //   trajectory->WLS();
-    //   trajectory->SetDrawTrajectory(true);
-    // }
-
-    if(SimDetectorConstruction::GetSphereOn()){
-      if((trackInformation->GetTrackStatus()&hitPMT)&&
-         (trackInformation->GetTrackStatus()&hitSphere)){
-        trajectory->SetDrawTrajectory(true);
-      }
-    }
-    else{
-      if(trackInformation->GetTrackStatus()&hitPMT)
-        trajectory->SetDrawTrajectory(true);
-    }
+    if (trackInformation->GetTrackStatus() & hitPMT)
+      trajectory->SetDrawTrajectory(true);
   }
   else //draw all other trajectories
     trajectory->SetDrawTrajectory(true);
