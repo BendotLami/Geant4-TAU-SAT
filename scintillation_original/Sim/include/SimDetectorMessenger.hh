@@ -63,14 +63,11 @@ class SimDetectorMessenger: public G4UImessenger
     G4UIcmdWithAnInteger*        fNxCmd;
     G4UIcmdWithAnInteger*        fNyCmd;
     G4UIcmdWithAnInteger*        fNzCmd;
-    G4UIcmdWithABool*            fSphereCmd;
     G4UIcmdWithADouble*          fReflectivityCmd;
-    // G4UIcmdWithABool*            fWlsCmd;
     G4UIcmdWithABool*            fSimCmd;
     G4UIcmdWithAnInteger*        fNFibersCmd;
     G4UIcommand*                 fDefaultsCmd;
     G4UIcmdWithADouble*          fMainScintYield;
-    // G4UIcmdWithADouble*          fWLSScintYield;
     G4UIcmdWithAnInteger*        fSaveThresholdCmd;
 };
 

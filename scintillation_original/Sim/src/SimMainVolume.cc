@@ -65,13 +65,9 @@ SimMainVolume::SimMainVolume(G4RotationMatrix *pRot,
   fScint_box = new G4Box("scint_box_removal", fScint_x / 2., fScint_y / 2., fScint_z / 2.);
   //*************************** housing and scintillator
   {
-    // TODO: Clean up this s**t
     std::vector<G4ThreeVector> cornerLocations;
-    // cornerLocations.resize(4);
     G4double x_loc = fScint_x / 2.; // - (sqrt(2) * dist_from_corner);
     G4double y_loc = fScint_y / 2.; // - (sqrt(2) * dist_from_corner);
-    // G4double x_loc = fScint_x;
-    // G4double y_loc = fScint_y;
     cornerLocations.emplace_back(x_loc, y_loc, 0);
     cornerLocations.emplace_back(x_loc, -y_loc, 0);
     cornerLocations.emplace_back(-x_loc, y_loc, 0);
@@ -96,7 +92,6 @@ SimMainVolume::SimMainVolume(G4RotationMatrix *pRot,
   G4double housing_dist_from_corner = dist_from_corner - fD_mtl;
 
   {
-    // TODO: Clean up this s**t
     // merge with last one
     std::vector<G4ThreeVector> cornerLocations;
     G4double x_loc = fScint_x / 2.;
@@ -130,29 +125,15 @@ SimMainVolume::SimMainVolume(G4RotationMatrix *pRot,
  
   new G4PVPlacement(0,G4ThreeVector(),fScint_log,"scintillator",
                                  fHousing_log,false,0);
- 
-  //*************** Miscellaneous sphere to demonstrate skin surfaces
-  fSphere = new G4Sphere("sphere",0.*mm,2.*cm,0.*deg,360.*deg,0.*deg,360.*deg);
-  fSphere_log = new G4LogicalVolume(fSphere,G4Material::GetMaterial("Al"),
-                                    "sphere_log");
-  // if(fSphereOn)
-  //   new G4PVPlacement(0,G4ThreeVector(5.*cm,5.*cm,5.*cm),
-  //                                     fSphere_log,"sphere",fScint_log,false,0);
 
   //****************** Build PMTs
-  //G4double innerRadius_pmt = 0.*cm;
   G4double height_pmt = fD_mtl / 2.;
-  //G4double startAngle_pmt = 0.*deg;
-  //G4double spanningAngle_pmt = 360.*deg;
 
   G4double distFromCorner = (dist_from_corner / 2.) - 0.5 * height_pmt;
   G4double pmt_width = dist_from_corner;
 
   fPmt = new G4Box("pmt_box", pmt_width, (fScint_z) / 2.,
                    height_pmt);
-
-  //fPmt = new G4Tubs("pmt_tube",innerRadius_pmt,fOuterRadius_pmt,
-  //                  height_pmt,startAngle_pmt,spanningAngle_pmt);
 
   //the "photocathode" is a metal slab at the back of the glass that
   //is only a very rough approximation of the real thing since it only
@@ -173,14 +154,6 @@ SimMainVolume::SimMainVolume(G4RotationMatrix *pRot,
 
   //***********Arrange pmts around the outside of housing**********
 
-  // G4double dx = fScint_x/fNx;
-  // G4double dy = fScint_y/fNy;
-  // G4double dz = fScint_z/fNz;
-
-  // G4double x,y,z;
-  // G4double xmin = -fScint_x/2. - dx/2.;
-  // G4double ymin = -fScint_y/2. - dy/2.;
-  // G4double zmin = -fScint_z/2. - dz/2.;
   static G4int k = 0;
 
   G4RotationMatrix *rm;
@@ -271,7 +244,6 @@ void SimMainVolume::CopyValues(){
   fNy=fConstructor->GetNY();
   fNz=fConstructor->GetNZ();
   fOuterRadius_pmt=fConstructor->GetPMTRadius();
-  fSphereOn=fConstructor->GetSphereOn();
   fRefl=fConstructor->GetHousingReflectivity();
 }
 
@@ -316,10 +288,6 @@ void SimMainVolume::PlacePMTs(G4LogicalVolume* pmt_log,
 void SimMainVolume::VisAttributes(){
   G4VisAttributes* housing_va = new G4VisAttributes(G4Colour(0.8,0.8,0.8));
   fHousing_log->SetVisAttributes(housing_va);
-
-  G4VisAttributes* sphere_va = new G4VisAttributes();
-  sphere_va->SetForceSolid(true);
-  fSphere_log->SetVisAttributes(sphere_va);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -340,18 +308,6 @@ void SimMainVolume::SurfaceProperties(){
     new G4OpticalSurface("HousingSurface",unified,polished,dielectric_metal);
   OpScintHousingSurface->SetMaterialPropertiesTable(scintHsngPT);
   OpScintHousingSurface->SetPolish(0.);
- 
-  //**Sphere surface properties
-  G4double sphereReflectivity[] = {1.0, 1.0};
-  assert(sizeof(sphereReflectivity) == sizeof(ephoton));
-  G4double sphereEfficiency[] = {0.0, 0.0};
-  assert(sizeof(sphereEfficiency) == sizeof(ephoton));
-  G4MaterialPropertiesTable* spherePT = new G4MaterialPropertiesTable();
-  spherePT->AddProperty("REFLECTIVITY", ephoton, sphereReflectivity, num);
-  spherePT->AddProperty("EFFICIENCY", ephoton, sphereEfficiency, num);
-  G4OpticalSurface* OpSphereSurface =
-    new G4OpticalSurface("SphereSurface",unified,polished,dielectric_metal);
-  OpSphereSurface->SetMaterialPropertiesTable(spherePT);
  
   //**Photocathode surface properties
   G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
@@ -387,7 +343,6 @@ void SimMainVolume::SurfaceProperties(){
   //**Create logical skin surfaces
   new G4LogicalSkinSurface("photocath_surf",fHousing_log,
                            OpScintHousingSurface);
-  new G4LogicalSkinSurface("sphere_surface",fSphere_log,OpSphereSurface);
   new G4LogicalSkinSurface("photocath_surf",fPhotocath_log,photocath_opsurf);
   new G4LogicalSkinSurface("antiref_surf",fAntiReflectivity_log,antiRef_Surface);
 }

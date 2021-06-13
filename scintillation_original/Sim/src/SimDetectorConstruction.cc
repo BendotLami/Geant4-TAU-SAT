@@ -33,7 +33,6 @@
 #include "SimScintSD.hh"
 #include "SimDetectorMessenger.hh"
 #include "SimMainVolume.hh"
-// #include "SimWLSSlab.hh"
 
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
@@ -51,7 +50,6 @@
 #include "G4Material.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
-#include "G4Sphere.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
 #include "G4PVPlacement.hh"
@@ -63,7 +61,6 @@
 #include "SD.hh"
 #include "G4ProductionCuts.hh"
 
-G4bool SimDetectorConstruction::fSphereOn = true;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -435,11 +432,9 @@ void SimDetectorConstruction::SetDefaults() {
 
   fOuterRadius_pmt = 2.3*cm;
 
-  fSphereOn = false;
   fRefl = 1.0;
 
   fNfibers = 15;
-  // fWLSslab = false;
   fMainVolumeOn = true;
   fMainVolume = nullptr;
   fSlab_z = 2.5*mm;
@@ -457,25 +452,10 @@ void SimDetectorConstruction::SetDefaults() {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SimDetectorConstruction::SetSphereOn(G4bool b) {
-  (void) b;
-  fSphereOn=false;
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void SimDetectorConstruction::SetHousingReflectivity(G4double r) {
   fRefl=r;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-// void SimDetectorConstruction::SetWLSSlabOn(G4bool b) {
-//   fWLSslab=b;
-//   G4RunManager::GetRunManager()->ReinitializeGeometry();
-// }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -496,12 +476,6 @@ void SimDetectorConstruction::SetNFibers(G4int n) {
 void SimDetectorConstruction::SetMainScintYield(G4double y) {
   fSim_mt->AddConstProperty("SCINTILLATIONYIELD",y/MeV);
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-// void SimDetectorConstruction::SetWLSScintYield(G4double y) {
-//   fMPTPStyrene->AddConstProperty("SCINTILLATIONYIELD",y/MeV);
-// }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

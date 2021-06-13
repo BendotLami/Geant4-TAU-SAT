@@ -33,7 +33,6 @@
 #include "G4PVPlacement.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
-#include "G4Sphere.hh"
 #include "G4Material.hh"
 #include "G4LogicalVolume.hh"
 #include "G4OpticalSurface.hh"
@@ -80,7 +79,6 @@ class SimMainVolume : public G4PVPlacement
     G4int fNy;
     G4int fNz;
     G4double fOuterRadius_pmt;
-    G4bool fSphereOn;
     G4double fRefl;
 
     //Basic Volumes
@@ -89,7 +87,6 @@ class SimMainVolume : public G4PVPlacement
     G4VSolid* fHousing_box;
     G4Box* fPmt;
     G4Box* fPhotocath;
-    G4Sphere* fSphere;
     G4Box* fAntiReflectivity;
 
     // Logical volumes
@@ -98,7 +95,6 @@ class SimMainVolume : public G4PVPlacement
     G4LogicalVolume* fHousing_log;
     G4LogicalVolume* fPmt_log;
     G4LogicalVolume* fPhotocath_log;
-    G4LogicalVolume* fSphere_log;
     G4LogicalVolume* fAntiReflectivity_log;
 
     // Sensitive Detectors positions

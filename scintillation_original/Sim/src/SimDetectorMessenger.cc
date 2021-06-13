@@ -97,42 +97,21 @@ SimDetectorMessenger::SimDetectorMessenger(SimDetectorConstruction* detector)
   fNzCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fNzCmd->SetToBeBroadcasted(false);
 
-  fSphereCmd = new G4UIcmdWithABool("/Sim/detector/volumes/sphere",this);
-  fSphereCmd->SetGuidance("Enable/Disable the sphere.");
-  fSphereCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  fSphereCmd->SetToBeBroadcasted(false);
-
   fReflectivityCmd = new G4UIcmdWithADouble("/Sim/detector/reflectivity",this);
   fReflectivityCmd->SetGuidance("Set the reflectivity of the housing.");
   fReflectivityCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fReflectivityCmd->SetToBeBroadcasted(false);
-
-  // fWlsCmd = new G4UIcmdWithABool("/Sim/detector/volumes/wls",this);
-  // fWlsCmd->SetGuidance("Enable/Disable the WLS slab");
-  // fWlsCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  // fWlsCmd->SetToBeBroadcasted(false);
 
   fSimCmd = new G4UIcmdWithABool("/Sim/detector/volumes/sim",this);
   fSimCmd->SetGuidance("Enable/Disable the main detector volume.");
   fSimCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fSimCmd->SetToBeBroadcasted(false);
 
-  // fNFibersCmd = new G4UIcmdWithAnInteger("/Sim/detector/nfibers",this);
-  // fNFibersCmd->SetGuidance("Set the number of WLS fibers in the WLS slab.");
-  // fNFibersCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  // fNFibersCmd->SetToBeBroadcasted(false);
-
   fMainScintYield=new G4UIcmdWithADouble("/Sim/detector/MainScintYield",this);
   fMainScintYield->SetGuidance("Set scinitillation yield of main volume.");
   fMainScintYield->SetGuidance("Specified in photons/MeV");
   fMainScintYield->AvailableForStates(G4State_PreInit,G4State_Idle);
   fMainScintYield->SetToBeBroadcasted(false);
-
-  // fWLSScintYield = new G4UIcmdWithADouble("/Sim/detector/WLSScintYield",this);
-  // fWLSScintYield->SetGuidance("Set scintillation yield of WLS Slab");
-  // fWLSScintYield->SetGuidance("Specified in photons/MeV");
-  // fWLSScintYield->AvailableForStates(G4State_PreInit,G4State_Idle);
-  // fWLSScintYield->SetToBeBroadcasted(false);
 
   fSaveThresholdCmd = new G4UIcmdWithAnInteger("/Sim/saveThreshold",this);
   fSaveThresholdCmd->
@@ -159,13 +138,10 @@ SimDetectorMessenger::~SimDetectorMessenger()
   delete fNzCmd;
   delete fDetectorDir;
   delete fVolumesDir;
-  delete fSphereCmd;
-  // delete fWlsCmd;
   delete fSimCmd;
   delete fNFibersCmd;
   delete fReflectivityCmd;
   delete fMainScintYield;
-  // delete fWLSScintYield;
   delete fSaveThresholdCmd;
   delete fDefaultsCmd;
 }
@@ -193,16 +169,10 @@ void SimDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if (command == fNzCmd){
     fSimDetector->SetNZ(fNzCmd->GetNewIntValue(newValue));
   }
-  else if (command == fSphereCmd){
-    fSimDetector->SetSphereOn(fSphereCmd->GetNewBoolValue(newValue));
-  }
   else if (command == fReflectivityCmd){
     fSimDetector
       ->SetHousingReflectivity(fReflectivityCmd->GetNewDoubleValue(newValue));
   }
-  // else if (command == fWlsCmd){
-  //   fSimDetector->SetWLSSlabOn(fWlsCmd->GetNewBoolValue(newValue));
-  // }
   else if (command == fSimCmd){
     fSimDetector->SetMainVolumeOn(fSimCmd->GetNewBoolValue(newValue));
   }
@@ -213,9 +183,6 @@ void SimDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
    fSimDetector->
               SetMainScintYield(fMainScintYield->GetNewDoubleValue(newValue));
   }
-  // else if (command == fWLSScintYield){
-  //   fSimDetector->SetWLSScintYield(fWLSScintYield->GetNewDoubleValue(newValue));
-  // }
   else if( command == fSaveThresholdCmd ){
     fSimDetector->SetSaveThreshold(fSaveThresholdCmd->GetNewIntValue(newValue));
   }

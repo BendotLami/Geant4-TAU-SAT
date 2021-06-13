@@ -79,7 +79,6 @@ int main(int argc, char** argv)
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->ReplacePhysics(new SimPhysics());
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
-  // opticalPhysics->SetWLSTimeProfile("delta");
 
   opticalPhysics->SetScintillationYieldFactor(1.0);
   opticalPhysics->SetScintillationExcitationRatio(0.0);

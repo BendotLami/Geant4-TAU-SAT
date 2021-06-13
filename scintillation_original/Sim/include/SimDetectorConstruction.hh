@@ -36,7 +36,6 @@ class G4VPhysicalVolume;
 class G4Box;
 class G4Tubs;
 class SimMainVolume;
-class G4Sphere;
 
 #include "G4Material.hh"
 #include "SimDetectorMessenger.hh"
@@ -89,15 +88,9 @@ class SimDetectorConstruction : public G4VUserDetectorConstruction
     G4double GetHousingThickness() const {return fD_mtl;}
     G4double GetPMTRadius() const {return fOuterRadius_pmt;}
     G4double GetSlabZ() const {return fSlab_z;}
- 
-    void SetSphereOn(G4bool );
-    static G4bool GetSphereOn(){return fSphereOn;}
 
     void SetHousingReflectivity(G4double );
     G4double GetHousingReflectivity() const {return fRefl;}
-
-    // void SetWLSSlabOn(G4bool b);
-    // G4bool GetWLSSlabOn() const {return fWLSslab;}
 
     void SetMainVolumeOn(G4bool b);
     G4bool GetMainVolumeOn() const {return fMainVolumeOn;}
@@ -106,7 +99,6 @@ class SimDetectorConstruction : public G4VUserDetectorConstruction
     G4int GetNFibers() const {return fNfibers;}
 
     void SetMainScintYield(G4double );
-    // void SetWLSScintYield(G4double );
 
     G4Region* GetTargetRegion()  {return fRegion;}
 
@@ -150,9 +142,7 @@ class SimDetectorConstruction : public G4VUserDetectorConstruction
     G4int fSaveThreshold;
     G4double fOuterRadius_pmt;
     G4int fNfibers;
-    static G4bool fSphereOn;
     G4double fRefl;
-    // G4bool fWLSslab;
     G4bool fMainVolumeOn;
     G4double fSlab_z;
 

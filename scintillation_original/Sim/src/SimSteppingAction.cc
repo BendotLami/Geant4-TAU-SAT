@@ -139,9 +139,6 @@ void SimSteppingAction::UserSteppingAction(const G4Step * theStep){
   if(particleType==G4OpticalPhoton::OpticalPhotonDefinition()){
     //Optical photon only
 
-    // if(thePrePV->GetName()=="Slab")
-    //   //force drawing of photons in WLS slab
-    //   trackInformation->SetForceDrawTrajectory(true);
     if(thePostPV->GetName()=="expHall")
       //Kill photons entering expHall from something other than Slab
       theTrack->SetTrackStatus(fStopAndKill);
@@ -201,8 +198,6 @@ void SimSteppingAction::UserSteppingAction(const G4Step * theStep){
       default:
         break;
       }
-      if(thePostPV->GetName()=="sphere")
-        trackInformation->AddTrackStatusFlag(hitSphere);
     }
   }
 }
