@@ -1,0 +1,26 @@
+Number of hits per event:	 0 +- 0
+Number of hits per event above threshold:	 0 +- 0
+Number of scintillation photons per event :	 0 +- 0
+Number of absorbed photons per event :	 0 +- 0
+Number of photons absorbed at boundary per event:	 0 +- 0
+Total energy deposition in scintillator per event:	 0 +- 0 keV.
+Scintillator 1, PMT 0 (Top-Left): 0
+Scintillator 1, PMT 1 (Bottom-Right): 0
+Scintillator 1, PMT 2 (Top-Right): 0
+Scintillator 1, PMT 3 (Bottom-Left): 0
+Scintillator 2, PMT 4 (Top-Left): 0
+Scintillator 2, PMT 5 (Bottom-Right): 0
+Scintillator 2, PMT 6 (Top-Right): 0
+Scintillator 2, PMT 7 (Bottom-Left): 0
+Scintillator 3, PMT 8 (Top-Left): 0
+Scintillator 3, PMT 9 (Bottom-Right): 0
+Scintillator 3, PMT 10 (Top-Right): 0
+Scintillator 3, PMT 11 (Bottom-Left): 0
+Scintillator 4, PMT 12 (Top-Left): 0
+Scintillator 4, PMT 13 (Bottom-Right): 0
+Scintillator 4, PMT 14 (Top-Right): 0
+Scintillator 4, PMT 15 (Bottom-Left): 0
+Scintillator 5, PMT 16 (Top-Left): 0
+Scintillator 5, PMT 17 (Bottom-Right): 0
+Scintillator 5, PMT 18 (Top-Right): 0
+Scintillator 5, PMT 19 (Bottom-Left): 0

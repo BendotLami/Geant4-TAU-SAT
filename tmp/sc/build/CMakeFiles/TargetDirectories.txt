@@ -1,0 +1,7 @@
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/install/strip.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/install/local.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/install.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/list_install_components.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/rebuild_cache.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/edit_cache.dir
+/media/sf_Shared_Folder/TAU-SAT/Geant4-TAU-SAT/JUNK/sc/build/CMakeFiles/LXe.dir

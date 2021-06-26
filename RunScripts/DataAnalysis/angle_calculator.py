@@ -6,8 +6,6 @@ Calc pmt's locations
 # imports
 from matplotlib.colors import Colormap
 import numpy as np
-# from numpy.core.shape_base import block
-# from numpy.lib.financial import pmt
 import pandas
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -27,6 +25,8 @@ LOCS = np.array([[i, j] for i in range(-30, 31, 2) for j in range(-30, 31, 2)])
 DIFF = SCINT_SIDE - PMT_HALF_DIAG*2
 PMT_LOCS = np.array([[[i*SCINT_SIDE, j*DIFF], [i*DIFF, j*SCINT_SIDE]]
                      for i in [-1, 1] for j in [-1, 1]])/2.
+
+DEG_SNELL = 30 # (deg)
 # %%
 
 loc_with_sum_angles = np.zeros((LOCS.shape[0], LOCS.shape[1] + 1))
@@ -55,8 +55,13 @@ pmt_points = [PMT_LOCS.reshape((8, 2))[:, 0], PMT_LOCS.reshape((8, 2))[:, 1]]
 plt.scatter(*shoot_points, c=loc_with_sum_angles[:, 2], vmax=40)
 for pmt in PMT_LOCS:
     plt.plot(pmt[:, 0], pmt[:, 1], c="Orange")
+plt.plot([SCINT_SIDE/2, SCINT_SIDE/2], [SCINT_SIDE/2, -SCINT_SIDE/2], c="Black")
+plt.plot([SCINT_SIDE/2, -SCINT_SIDE/2], [SCINT_SIDE/2, SCINT_SIDE/2], c="Black")
+plt.plot([SCINT_SIDE/2, -SCINT_SIDE/2], [-SCINT_SIDE/2, -SCINT_SIDE/2], c="Black")
+plt.plot([-SCINT_SIDE/2, -SCINT_SIDE/2], [SCINT_SIDE/2, -SCINT_SIDE/2], c="Black")
 plt.xlabel("x (cm)")
 plt.ylabel("y (cm)")
+plt.gca().set_aspect('equal', adjustable='box')
 plt.colorbar()
 plt.show(block=False)
 # %%
@@ -95,13 +100,14 @@ photons_total = photons_avg * 360
 print(f"Photons total(by relative deg): {np.mean(photons_total)} +- {np.std(photons_total)}") 
 del photons_avg, photons_total
 # %%
-total_created_measured = np.expand_dims((all_data[:, 3] / all_data[:, 2]) * 360, 1)
+beta = 2*(-math.cos(DEG_SNELL*math.pi/360) + 1)
+total_created_measured = np.expand_dims((all_data[:, 3] / all_data[:, 2]) * (360 / (1 - beta)), 1)
 all_data = np.concatenate([all_data, total_created_measured], axis=1)
 # all_data:
 # x, y, degrees, total_pmt, total_created, total_created_measured
 # %%
 # save to csv
-# with open("./results.csv", "w", newline='') as f:
+# with open("./results_2.csv", "w", newline='') as f:
 #     field_names = ["x", "y", "degrees", "total_pmt", "total_created", "total_created_measured"]
 #     writer = csv.writer(f, delimiter=',', quotechar='"',
 #                             quoting=csv.QUOTE_MINIMAL)
@@ -115,10 +121,13 @@ diff = np.abs(all_data[:, -2] - all_data[:, -1])
 # ax.plot(all_data[:, 0],
 #            all_data[:, 1], diff, c=np.max(diff)-diff, cmap='inferno', s=200)
 ax.plot_trisurf(all_data[:, 0],
-           all_data[:, 1], diff, cmap='inferno_r')
-ax.set_zlabel("Error (|Estimated - Expected|")
+           all_data[:, 1], diff, cmap='inferno', vmax=300)
+ax.set_zlabel("Error (|Estimated - Expected|)")
 ax.set_xlabel("x (cm)")
 ax.set_ylabel("y (cm)")
 
 plt.show()
+# %%
+print(f"Measurement error: {np.mean(diff)} +- {np.std(diff)}") 
+print(f"Measurement error percentage: {(np.mean(diff) / np.mean(all_data[:, -2]))*100}%")
 # %%
