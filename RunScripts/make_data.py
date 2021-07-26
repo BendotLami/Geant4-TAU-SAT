@@ -102,8 +102,13 @@ def create_runs(input_data):
                             create_input_file(subfolder_name, particle, vec_to_str(ion), str(energy), vec_to_str(direct), vec_to_str(pos), beamOn)
 
 if __name__=="__main__":
-    save_path = sys.argv[1]
-    json_path = sys.argv[2]
+    try:
+        save_path = sys.argv[1]
+        json_path = sys.argv[2]
+    except IndexError:
+        print("Error parsing args: make_data.py [save_path] [input_json_path]")
+        exit(1)
+    
     if os.path.exists(json_path):
         json_data = load_json(json_path)
     else:
